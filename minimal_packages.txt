@@ -1,0 +1,99 @@
+
+pacstrap /mnt 
+base 
+linux 
+linux-firmware 
+base-devel 
+linux-headers 
+vim 
+git 
+amd-ucode / itel-ucode
+btrfs-progs
+
+pacman -S 
+grub 
+grub-btrfs 
+os-prober 
+efibootmgr 
+bash-completion 
+
+networkmanager 
+wpa_supplicant
+
+dialog
+
+# Zero-configuration networking
+avahi (It allows programs to publish and discover services and hosts running on a local network with no specific configuration)
+
+# X
+xdg-user-dirs 
+xdg-utils 
+
+# Filesystems
+mtools 
+dosfstools
+gvfs 
+gvfs-smb 
+nfs-utils
+ntfs-3g
+
+# Bluetooth
+bluez 
+bluez-utils 
+# Printing
+cups 
+
+# Sound
+pipewire
+pipewire-alsa 
+pipewire-pulse 
+pipewire-jack 
+pavucontrol
+alsa-utils
+
+openssh 
+rsync 
+
+# System events and power
+acpid
+acpi 
+acpi_call 
+tlp 
+
+# Fonts
+terminus-font
+ttf-dejavu
+ttf-liberation
+ttf-font-awesome
+
+# Virtualization
+virt-manager 
+qemu 
+qemu-arch-extra 
+edk2-ovmf 
+
+# Networking
+bridge-utils 
+dnsmasq
+inetutils 
+dnsutils
+vde2 
+openbsd-netcat 
+iptables-nft 
+ipset 
+firewalld 
+
+# Other
+flatpak 
+sof-firmware (Microphone software)
+nss-mdns 
+
+
+systemctl enable NetworkManager
+systemctl enable bluetooth
+systemctl enable cups.service
+systemctl enable sshd
+systemctl enable tlp
+systemctl enable fstrim.timer
+systemctl enable libvirtd
+systemctl enable acpid
