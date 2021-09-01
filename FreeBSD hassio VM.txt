@@ -1,0 +1,70 @@
+pkg install vm-bhyve
+2. zfs create pool/vm
+3. sysrc vm_enable="YES"
+4. sysrc vm_dir="zfs:pool/vm"
+5. vm init
+6. cp /usr/local/share/examples/vm-bhyve/* /mountpoint/for/pool/vm/.templates/
+7. vm switch create public
+8. vm switch add public em0
+9. vm iso https://download.freebsd.org/ftp/releases/ISO-IMAGES/11.2/FreeBSD-11.2-RELEASE-amd64-bootonly.iso
+10. vm create myguest
+11. vm install [-f] myguest FreeBSD-11.2-RELEASE-amd64-bootonly.iso
+12. vm console myguest
+
+
+Based/inspired off of Installing Home Assistant Supervised on FreeNAS 11.3 (in VM) 46 and done on FreeBSD 12.1-RELEASE-p8, with latest (as of 2020 Aug 31) packages and using Churchers vm-bhyve 23 package.
+
+Login, su to root.
+
+Copy to clipboard
+pkg install qemu
+vm img https://github.com/home-assistant/operating-system/releases/download/4.12/hassos_ova-4.12.qcow2.gz
+vm create -t debian -c 4 -m 4GB -s 200G -i hassos_ova-4.12.qcow2 home-assistant
+This creates a new VM using your setup for vm-bhyve, with a sparse zvol of 200GB, 4GB of RAM, and 4 CPUs. Consult https://www.home-assistant.io/docs/installation/ 21 for minimum virtual hardware specifications.
+
+This may take a few seconds to a few minutes, depending on your storage speeds. After this, you need to edit the VM config file.
+
+Copy to clipboard
+vim /tank/vms/home-assistant/home-assistant.conf
+Your configuration needs to look similar to below. The important parts are the loader, and graphics_listen bits. Set the listen and optionally port to the IP/port you want. This will give you the login console. You’ll probably end up wanting to lock this down behind a firewall or something, eventually, for security.
+
+Copy to clipboard
+loader="uefi"
+graphics="yes"
+xhci_mouse="yes"
+graphics_listen="X.X.X.X"
+graphics_port="5900"
+graphics_wait="no"
+graphics_res="800x600"
+cpu="4"
+memory="4GB"
+network0_type="virtio-net"
+network0_switch="public"
+disk0_type="ahci-hd"
+disk0_name="disk0"
+disk0_dev="sparse-zvol"
+uuid="<VALUE>"
+network0_mac="<VALUE>"
+After this, optional but recommended, install RealVNC Viewer 3 in order to see/monitor the rest of the boot process, as well as gain access to the booted console.
+
+Then start the VM
+
+Copy to clipboard
+vm start home-assistant
+Next step either get the IP address of the VM from your DHCP server, or connect via VNC and login to the shell.
+
+The VNC route, connect, wait for it to boot and give you a login prompt (may be hidden by other messages, hit enter after messages stop scrolling by until you get “homeassistant login:” prompt, use username “root”, it won’t prompt you for a password (eventually need to add root password update instructions here).
+
+You’ll be at a
+
+Copy to clipboard
+ha >
+prompt. Type “login” to get to the shell.
+
+At the # prompt, type nmcli and hit enter.
+
+Information will scroll up, and then pause at the top of the screen. On my setup, the enp0s5: connected to HassOS default is the name of the default network controller, which should have an IPv4/IPv6 address based on your network setup.
+
+Type q to exit the nmcli output, and then exit to exit the shell.
+
+Take the IP address from either your DHCP server, or the and go to the the following http://X.X.X.X:8123 and wait until it’s done updating/setting up for the first time. It’ll then walk you through the rest of the installation/setup process, as per usual.
