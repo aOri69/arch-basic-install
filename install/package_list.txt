@@ -38,7 +38,6 @@ rsync
 acpid
 acpi
 acpi_call
-tlp
 terminus-font
 ttf-dejavu
 ttf-liberation
