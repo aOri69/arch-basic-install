@@ -1,0 +1,35 @@
+ls /usr/share/kbd/keymaps/**/*.map.gz
+loadkeys ru
+ls /sys/firmware/efi/efivars
+timedatectl set-ntp true
+
+
+gdisk /dev/sda
+n/ENTER/+512M/ef00
+n/ENTER/ENTER/ENTER
+
+mkfs.vfat /dev/sda1
+mkfs.btrfs /dev/sda2
+
+mount /dev/sda2 /mnt
+cd /mnt
+btrfs su cr @
+btrfs su cr @home
+btrfs su cr @var
+btrfs su cr @snapshots
+
+cd
+umount /mnt
+mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@ /dev/sda2 /mnt
+mkdir /mnt/{efi,home,var,.snapshots}
+mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@home /dev/sda2 /mnt/home
+mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@var /dev/sda2 /mnt/var
+mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@snapshots /dev/sda2 /mnt/.snapshots
+mount /dev/sda1 /mnt/efi
+
+pacstrap /mnt base linux linux-firmware vim git amd-ucode btrfs-progs
+
+genfstab -U /mnt >> /mnt/etc/fstab
+arch-chroot /mnt
+
+Then -> base.sh
