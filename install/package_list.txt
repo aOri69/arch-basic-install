@@ -53,7 +53,7 @@ vde2
 openbsd-netcat
 inetutils
 dnsutils
-iptables-nft 
+iptables-nft
 ipset
 firewalld
 flatpak
