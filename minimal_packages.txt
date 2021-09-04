@@ -3,20 +3,24 @@ pacstrap /mnt
 base 
 linux 
 linux-firmware 
-base-devel 
-linux-headers 
-vim 
-git 
-amd-ucode / itel-ucode
-btrfs-progs
 
 pacman -S 
+# Obligatory
+base-devel
+linux-headers
+vim
+git 
+amd-ucode / intel-ucode
+btrfs-progs
+
+# Loader
 grub 
 grub-btrfs 
 os-prober 
 efibootmgr 
 bash-completion 
 
+# Networking
 networkmanager 
 wpa_supplicant
 
@@ -24,6 +28,7 @@ dialog
 
 # Zero-configuration networking
 avahi (It allows programs to publish and discover services and hosts running on a local network with no specific configuration)
+nss-mdns
 
 # X
 xdg-user-dirs 
@@ -37,9 +42,14 @@ gvfs-smb
 nfs-utils
 ntfs-3g
 
+# IP utils
+inetutils
+dnsutils
+
 # Bluetooth
 bluez 
 bluez-utils 
+
 # Printing
 cups 
 
@@ -70,15 +80,17 @@ ttf-font-awesome
 virt-manager 
 qemu 
 qemu-arch-extra 
-edk2-ovmf 
-
-# Networking
-bridge-utils 
+bridge-utils
 dnsmasq
-inetutils 
-dnsutils
+edk2-ovmf 
 vde2 
 openbsd-netcat 
+
+# Networking
+inetutils 
+dnsutils
+
+# Firewall
 iptables-nft 
 ipset 
 firewalld 
@@ -86,7 +98,6 @@ firewalld
 # Other
 flatpak 
 sof-firmware (Microphone software)
-nss-mdns 
 
 
 systemctl enable NetworkManager
