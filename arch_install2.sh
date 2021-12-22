@@ -53,8 +53,8 @@ echo "$USERNAME ALL=(ALL) ALL" >> /etc/sudoers.d/$USERNAME
 
 # Enable services
 systemctl enable NetworkManager
-#systemctl enable iwd
 systemctl enable acpid
+#systemctl enable iwd
 #systemctl enable systemd-networkd
 #systemctl enable systemd-resolved
 #------------------------------------------------------------------------------------------------
