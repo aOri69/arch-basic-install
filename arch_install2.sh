@@ -29,7 +29,7 @@ echo "127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >> /etc/hosts
 
 # Additional packages
 #pacman -S amd-ucode iwd acpid acpi acpi_call
-pacman -S --noconfirm amd-ucode efibootmgr grub grub-btrfs base-devel networkmanager wpa_supplicant acpid acpi acpi_call
+pacman -S --noconfirm amd-ucode efibootmgr grub grub-btrfs base-devel linux-headers git networkmanager wpa_supplicant acpid acpi acpi_call
 
 # Loader
 read -p "....Enter EFI directory for GRUB: " EFI_DIR
