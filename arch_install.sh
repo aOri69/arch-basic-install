@@ -27,7 +27,9 @@ btrfs subvolume create /mnt/var
 #btrfs subvolume create /mnt/var_log
 #btrfs subvolume create /mnt/var_cache
 btrfs subvolume create /mnt/swap
+sleep 2
 umount /mnt
+sleep 2
 echo "....BTRFS Subvolumes created"
 # Mount BTRFS subvolumes
 o_btrfs=defaults,noatime,ssd,discard=async,compress=lzo,space_cache=v2
