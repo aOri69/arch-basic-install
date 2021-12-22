@@ -1,19 +1,17 @@
 #!/bin/bash
 
-pacman -S --noconfirm open-vm-tools
-systemctl enable vmtoolsd
+sudo pacman -S --noconfirm open-vm-tools
+sudo systemctl enable vmtoolsd
 
-pacman -S --noconfirm xorg xf86-video-vmware pipewire pipewire-pulse pipewire-jack pipewire-alsa xfce4 xfce4-pulseaudio-plugin firefox htop
-pacman -S --noconfirm lightdm lightdm-gtk-greeter
-systemctl enable lightdm
+sudo pacman -S --noconfirm xorg xf86-video-vmware pipewire pipewire-pulse pipewire-jack pipewire-alsa xfce4 xfce4-pulseaudio-plugin firefox htop
+sudo pacman -S --noconfirm lightdm lightdm-gtk-greeter
+sudo systemctl enable lightdm
 
 # AUR helper
 git clone https://aur.archlinux.org/paru
 cd paru
 makepkg -si
 cd..
-
-rm -rf paru
 
 # ZRAM
 paru -S zramd
