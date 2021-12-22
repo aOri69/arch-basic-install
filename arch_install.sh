@@ -59,6 +59,7 @@ echo "....Generating FSTAB"
 genfstab -U /mnt >> /mnt/etc/fstab
 echo "....FSTAB file generated"
 chmod +x arch_install2.sh
+chmod +x arch_install3.sh
 cp arch_install2.sh /mnt
 cp arch_install3.sh /mnt
 echo "....Scripts copied to /mnt"
