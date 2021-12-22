@@ -44,7 +44,7 @@ echo "$USERNAME ALL=(ALL) ALL" >> /etc/sudoers.d/$USERNAME
 
 # Additional packages
 #pacman -S amd-ucode iwd acpid acpi acpi_call
-pacman -S --noconfirm amd-ucode efibootmgr grub grub-btrfs networkmanager wpa_supplicant acpid acpi acpi_call
+pacman -S --noconfirm amd-ucode efibootmgr grub grub-btrfs base-devel networkmanager wpa_supplicant acpid acpi acpi_call
 
 # Loader
 read -p "....Enter EFI directory for GRUB: " EFI_DIR
@@ -53,7 +53,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 # Enable services
 systemctl enable NetworkManager
-systemctl enable iwd
+#systemctl enable iwd
 systemctl enable acpid
 systemctl enable systemd-networkd
 systemctl enable systemd-resolved
