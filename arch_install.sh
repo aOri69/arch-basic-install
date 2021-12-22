@@ -35,7 +35,8 @@ echo "....BTRFS Subvolumes created"
 o_btrfs=defaults,noatime,ssd,discard=async,compress=lzo,space_cache=v2
 mount -o $o_btrfs,subvol=root $ROOT_PARTITION /mnt
 #mkdir -p /mnt/{boot,home,var/{cache,log},opt,srv,tmp,.snapshots,swap}
-mkdir -p /mnt/{boot,home,var,opt,srv,tmp,.snapshots,swap}
+#mkdir -p /mnt/{boot,home,var,opt,srv,tmp,.snapshots,swap}
+mkdir -p /mnt/{efi,home,var,opt,srv,tmp,.snapshots,swap}
 mount -o $o_btrfs,subvol=root $ROOT_PARTITION /mnt
 mount -o $o_btrfs,subvol=home $ROOT_PARTITION /mnt/home
 mount -o $o_btrfs,subvol=snapshots $ROOT_PARTITION /mnt/.snapshots
@@ -48,7 +49,7 @@ mount -o defaults,noatime,discard=async,ssd,subvol=swap $ROOT_PARTITION /mnt/swa
 #mount -o $o_btrfs,subvol=var_cache /dev/sda2 /mnt/var/cache
 read -p "....Enter BOOT partition to mount as BOOT: " BOOT_PARTITION
 # Mount EFI partition
-mount $BOOT_PARTITION /mnt/boot
+mount $BOOT_PARTITION /mnt/efi
 
 # Install the base system plus a few packages
 pacstrap /mnt base linux linux-firmware btrfs-progs vim
