@@ -60,4 +60,4 @@ echo "....FSTAB file generated"
 chmod +x arch_install2.sh
 cp arch_install2.sh /mnt
 echo "....Script 2 copied to /mnt"
-echo "....Please chroot to the /mnt"
+arch-chroot /mnt
