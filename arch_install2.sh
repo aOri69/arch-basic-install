@@ -39,8 +39,6 @@ echo "....Changing $USERNAME password: "
 passwd $USERNAME
 #echo asokolov:230989 | chpasswd
 echo "....Adding $USERNAME to sudo users: "
-# Sudo
-echo "$USERNAME ALL=(ALL) ALL" >> /etc/sudoers.d/$USERNAME
 
 # Additional packages
 #pacman -S amd-ucode iwd acpid acpi acpi_call
@@ -50,6 +48,9 @@ pacman -S --noconfirm amd-ucode efibootmgr grub grub-btrfs base-devel networkman
 read -p "....Enter EFI directory for GRUB: " EFI_DIR
 grub-install --target=x86_64-efi --efi-directory=$EFI_DIR --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
+
+# Sudo
+echo "$USERNAME ALL=(ALL) ALL" >> /etc/sudoers.d/$USERNAME
 
 # Enable services
 systemctl enable NetworkManager
