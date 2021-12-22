@@ -55,4 +55,7 @@ pacstrap /mnt base linux linux-firmware btrfs-progs vim
 echo "....Generating FSTAB"
 genfstab -U /mnt >> /mnt/etc/fstab
 echo "....FSTAB file generated"
+chmod +x arch_install2.sh
+cp arch_install2.sh /mnt
+echo "....Script 2 copied to /mnt"
 echo "....Please chroot to the /mnt"
