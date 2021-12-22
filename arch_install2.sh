@@ -27,6 +27,15 @@ echo "127.0.0.1 localhost" >> /etc/hosts
 echo "::1       localhost" >> /etc/hosts
 echo "127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >> /etc/hosts
 
+# Additional packages
+#pacman -S amd-ucode iwd acpid acpi acpi_call
+pacman -S --noconfirm amd-ucode efibootmgr grub grub-btrfs base-devel networkmanager wpa_supplicant acpid acpi acpi_call
+
+# Loader
+read -p "....Enter EFI directory for GRUB: " EFI_DIR
+grub-install --target=x86_64-efi --efi-directory=$EFI_DIR --bootloader-id=GRUB
+grub-mkconfig -o /boot/grub/grub.cfg
+
 # Users and passwords
 # Root
 echo "....Changing root password: "
@@ -39,16 +48,6 @@ echo "....Changing $USERNAME password: "
 passwd $USERNAME
 #echo asokolov:230989 | chpasswd
 echo "....Adding $USERNAME to sudo users: "
-
-# Additional packages
-#pacman -S amd-ucode iwd acpid acpi acpi_call
-pacman -S --noconfirm amd-ucode efibootmgr grub grub-btrfs base-devel networkmanager wpa_supplicant acpid acpi acpi_call
-
-# Loader
-read -p "....Enter EFI directory for GRUB: " EFI_DIR
-grub-install --target=x86_64-efi --efi-directory=$EFI_DIR --bootloader-id=GRUB
-grub-mkconfig -o /boot/grub/grub.cfg
-
 # Sudo
 echo "$USERNAME ALL=(ALL) ALL" >> /etc/sudoers.d/$USERNAME
 
