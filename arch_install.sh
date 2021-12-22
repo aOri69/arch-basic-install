@@ -49,7 +49,7 @@ read -p "....Enter BOOT partition to mount as BOOT: " BOOT_PARTITION
 mount $BOOT_PARTITION /mnt/boot
 
 # Install the base system plus a few packages
-pacstrap /mnt base base-devel linux linux-headers btrfs-progs
+pacstrap /mnt base linux linux-firmware btrfs-progs vim
 
 # Mountpoints make persistent
 echo "....Generating FSTAB"

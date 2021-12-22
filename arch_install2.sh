@@ -43,9 +43,16 @@ echo "....Adding $USERNAME to sudo users: "
 echo "$USERNAME ALL=(ALL) ALL" >> /etc/sudoers.d/$USERNAME
 
 # Additional packages
-pacman -S amd-ucode iwd acpid acpi acpi_call
+#pacman -S amd-ucode iwd acpid acpi acpi_call
+pacman -S --noconfirm amd-ucode efibootmgr grub grub-btrfs networkmanager wpa_supplicant acpid acpi acpi_call
+
+# Loader
+read -p "....Enter EFI directory for GRUB: " EFI_DIR
+grub-install --target=x86_64-efi --efi-directory=$EFI_DIR --bootloader-id=GRUB
+grub-mkconfig -o /boot/grub/grub.cfg
 
 # Enable services
+systemctl enable NetworkManager
 systemctl enable iwd
 systemctl enable acpid
 systemctl enable systemd-networkd
