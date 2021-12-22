@@ -33,11 +33,10 @@ sleep 2
 echo "....BTRFS Subvolumes created"
 # Mount BTRFS subvolumes
 o_btrfs=defaults,noatime,ssd,discard=async,compress=lzo,space_cache=v2
-mount -o $o_btrfs,subvol=root $ROOT_PARTITION /mnt
+mount -o $o_btrfs,subvol=@ $ROOT_PARTITION /mnt
 #mkdir -p /mnt/{boot,home,var/{cache,log},opt,srv,tmp,.snapshots,swap}
 #mkdir -p /mnt/{boot,home,var,opt,srv,tmp,.snapshots,swap}
 mkdir -p /mnt/{efi,home,var,opt,srv,tmp,.snapshots,swap}
-mount -o $o_btrfs,subvol=@ $ROOT_PARTITION /mnt
 mount -o $o_btrfs,subvol=@home $ROOT_PARTITION /mnt/home
 mount -o $o_btrfs,subvol=@snapshots $ROOT_PARTITION /mnt/.snapshots
 mount -o $o_btrfs,subvol=@tmp $ROOT_PARTITION /mnt/tmp
