@@ -55,8 +55,8 @@ grub-mkconfig -o /boot/grub/grub.cfg
 systemctl enable NetworkManager
 #systemctl enable iwd
 systemctl enable acpid
-systemctl enable systemd-networkd
-systemctl enable systemd-resolved
+#systemctl enable systemd-networkd
+#systemctl enable systemd-resolved
 #------------------------------------------------------------------------------------------------
 # systemd-boot config
 # bootctl install
