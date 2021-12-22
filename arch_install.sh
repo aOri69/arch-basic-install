@@ -7,9 +7,9 @@ setfont cyr-sun16
 timedatectl set-ntp true
 
 
-gdisk /dev/sda
-n/ENTER/+512M/ef00
-n/ENTER/ENTER/ENTER
+#gdisk /dev/sda
+#n/ENTER/+512M/ef00
+#n/ENTER/ENTER/ENTER
 
 mkfs.vfat /dev/sda1
 mkfs.btrfs /dev/sda2
