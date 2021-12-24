@@ -49,7 +49,7 @@ select FIRM in AMD INTEL BOTH NONE; do
 done
 
 # Additional packages
-pacman -S --noconfirm --needed base-devel linux-headers vim git bash-completion
+pacman -S --noconfirm --needed vim git bash-completion
 pacman -S --noconfirm --needed efibootmgr grub grub-btrfs btrfs-progs
 
 # Loader

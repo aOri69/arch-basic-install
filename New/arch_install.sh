@@ -6,7 +6,6 @@ setfont cyr-sun16
 #ls /sys/firmware/efi/efivars
 timedatectl set-ntp true
 
-
 #gdisk /dev/sda
 #n/ENTER/+512M/ef00
 #n/ENTER/ENTER/ENTER
@@ -51,11 +50,11 @@ read -p "....Enter BOOT partition to mount as BOOT: " BOOT_PARTITION
 mount $BOOT_PARTITION /mnt/efi
 
 # Install the base system plus a few packages
-pacstrap /mnt base linux linux-firmware
+pacstrap /mnt base base-devel linux linux-firmware linux-headers
 
 # Mountpoints make persistent
 echo "....Generating FSTAB"
-genfstab -U /mnt >> /mnt/etc/fstab
+genfstab -U /mnt >>/mnt/etc/fstab
 echo "....FSTAB file generated"
 chmod +x arch_install2.sh
 chmod +x arch_install3.sh
