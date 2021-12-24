@@ -1,5 +1,25 @@
 #!/bin/bash
 
+function askYesNo {
+    QUESTION=$1
+    DEFAULT=$2
+    if [ "$DEFAULT" = true ]; then
+        OPTIONS="[Y/n]"
+        DEFAULT="y"
+    else
+        OPTIONS="[y/N]"
+        DEFAULT="n"
+    fi
+    read -p "$QUESTION $OPTIONS " -n 1 -s -r INPUT
+    INPUT=${INPUT:-${DEFAULT}}
+    echo ${INPUT}
+    if [[ "$INPUT" =~ ^[yY]$ ]]; then
+        ANSWER=true
+    else
+        ANSWER=false
+    fi
+}
+
 # Enter installed system
 #arch-chroot /mnt
 
@@ -122,23 +142,3 @@ systemctl enable acpid
 #[DHCP]
 #RouteMetric=20
 #------------------------------------------------------------------------------------------------
-
-function askYesNo {
-    QUESTION=$1
-    DEFAULT=$2
-    if [ "$DEFAULT" = true ]; then
-        OPTIONS="[Y/n]"
-        DEFAULT="y"
-    else
-        OPTIONS="[y/N]"
-        DEFAULT="n"
-    fi
-    read -p "$QUESTION $OPTIONS " -n 1 -s -r INPUT
-    INPUT=${INPUT:-${DEFAULT}}
-    echo ${INPUT}
-    if [[ "$INPUT" =~ ^[yY]$ ]]; then
-        ANSWER=true
-    else
-        ANSWER=false
-    fi
-}
