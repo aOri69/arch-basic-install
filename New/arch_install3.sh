@@ -45,7 +45,7 @@ fi
 
 askYesNo "Additional filesystems support?" true
 if [ "$ANSWER" = true ]; then
-    sudo pacman -S --noconfirm --needed mtools dosfstoolsgvfs gvfs-smb nfs-utils ntfs-3g
+    sudo pacman -S --noconfirm --needed mtools dosfstools gvfs gvfs-smb nfs-utils ntfs-3g
 fi
 
 askYesNo "Zero-configuration networking support?" false
