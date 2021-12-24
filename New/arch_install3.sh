@@ -26,24 +26,24 @@ if [ "$ANSWER" = true ]; then
     sudo systemctl enable vmtoolsd
 fi
 
-askYesNo "Printing support?" true
+askYesNo "Printing support?" false
 if [ "$ANSWER" = true ]; then
     sudo pacman -S --noconfirm --needed cups
     sudo systemctl enable cups
 fi
 
-askYesNo "Bluetooth support?" true
+askYesNo "Bluetooth support?" false
 if [ "$ANSWER" = true ]; then
     sudo pacman -S --noconfirm --needed bluez bluez-utils
     sudo systemctl enable bluetooth
 fi
 
-askYesNo "Additional IP utils + dialog?" true
+askYesNo "Additional IP utils + dialog?" false
 if [ "$ANSWER" = true ]; then
     sudo pacman -S --noconfirm --needed inetutils dnsutils dialog
 fi
 
-askYesNo "Additional filesystems support?" true
+askYesNo "Additional filesystems support?" false
 if [ "$ANSWER" = true ]; then
     sudo pacman -S --noconfirm --needed mtools dosfstools gvfs gvfs-smb nfs-utils ntfs-3g
 fi
@@ -63,26 +63,26 @@ if [ "$ANSWER" = true ]; then
 fi
 
 # Fonts
-askYesNo "Additional fonts?" true
+askYesNo "Additional fonts?" false
 if [ "$ANSWER" = true ]; then
     sudo pacman -S --noconfirm --needed terminus-font ttf-dejavu ttf-liberation ttf-font-awesome
 fi
 
 # Pipewire support
-askYesNo "KDE?" true
+askYesNo "Install PIPEWIRE?" false
 if [ "$ANSWER" = true ]; then
     sudo pacman -S --noconfirm --needed pipewire pipewire-pulse pipewire-jack pipewire-alsa pavucontrol
 fi
 
 # KDE
-askYesNo "KDE?" true
+askYesNo "KDE?" false
 if [ "$ANSWER" = true ]; then
     sudo pacman -S --noconfirm --needed xorg xf86-video-vmware
     sudo pacman -S --noconfirm --needed sddm plasma plasma-wayland-session kde-applications packagekit-qt5
     sudo systemctl enable sddm
 fi
 # AUR helper
-askYesNo "Install PARU AUR helper?" true
+askYesNo "Install PARU AUR helper?" false
 if [ "$ANSWER" = true ]; then
 
     git clone https://aur.archlinux.org/paru
@@ -91,7 +91,7 @@ if [ "$ANSWER" = true ]; then
     cd..
 fi
 # ZRAM
-askYesNo "Install ZRAM?" true
+askYesNo "Install ZRAM?" false
 if [ "$ANSWER" = true ]; then
 
     paru -S zramd
