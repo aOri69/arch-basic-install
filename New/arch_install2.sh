@@ -26,27 +26,14 @@ echo "127.0.0.1 localhost" >>/etc/hosts
 echo "::1       localhost" >>/etc/hosts
 echo "127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >>/etc/hosts
 
-PS3="Select processor firmware to install: "
-select FIRM in AMD INTEL BOTH NONE; do
-    case $FIRM in
-    AMD)
-        pacman -S --noconfirm amd-ucode
-        break
-        ;;
-    INTEL)
-        pacman -S --noconfirm intel-ucode
-        break
-        ;;
-    BOTH)
-        pacman -S --noconfirm amd-ucode intel-ucode
-        break
-        ;;
-    NONE)
-        pacman -S --noconfirm amd-ucode intel-ucode
-        break
-        ;;
-    esac
-done
+askYesNo "Install amd-ucode?" true
+if [ "$ANSWER" = true ]; then
+    pacman -S --noconfirm amd-ucode
+fi
+askYesNo "Install intel-ucode?" true
+if [ "$ANSWER" = true ]; then
+    pacman -S --noconfirm intel-ucode
+fi
 
 # Additional packages
 pacman -S --noconfirm --needed vim git bash-completion
@@ -135,3 +122,23 @@ systemctl enable acpid
 #[DHCP]
 #RouteMetric=20
 #------------------------------------------------------------------------------------------------
+
+function askYesNo {
+    QUESTION=$1
+    DEFAULT=$2
+    if [ "$DEFAULT" = true ]; then
+        OPTIONS="[Y/n]"
+        DEFAULT="y"
+    else
+        OPTIONS="[y/N]"
+        DEFAULT="n"
+    fi
+    read -p "$QUESTION $OPTIONS " -n 1 -s -r INPUT
+    INPUT=${INPUT:-${DEFAULT}}
+    echo ${INPUT}
+    if [[ "$INPUT" =~ ^[yY]$ ]]; then
+        ANSWER=true
+    else
+        ANSWER=false
+    fi
+}
