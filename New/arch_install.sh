@@ -51,7 +51,7 @@ read -p "....Enter BOOT partition to mount as BOOT: " BOOT_PARTITION
 mount $BOOT_PARTITION /mnt/efi
 
 # Install the base system plus a few packages
-pacstrap /mnt base linux linux-firmware btrfs-progs vim
+pacstrap /mnt base linux linux-firmware
 
 # Mountpoints make persistent
 echo "....Generating FSTAB"

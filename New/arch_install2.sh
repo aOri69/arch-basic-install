@@ -15,21 +15,42 @@ ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime
 timedatectl set-ntp true
 hwclock --systohc
 
-
 read -p "....Enter hostname of the machine: " HOSTNAME
 # Base settings
-echo "LANG=ru_RU.UTF-8" >> /etc/locale.conf
-echo "KEYMAP=ru" >> /etc/vconsole.conf
-echo "FONT=cyr-sun16" >> /etc/vconsole.conf
+echo "LANG=ru_RU.UTF-8" >>/etc/locale.conf
+echo "KEYMAP=ru" >>/etc/vconsole.conf
+echo "FONT=cyr-sun16" >>/etc/vconsole.conf
 # Network
-echo "$HOSTNAME" >> /etc/hostname
-echo "127.0.0.1 localhost" >> /etc/hosts
-echo "::1       localhost" >> /etc/hosts
-echo "127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >> /etc/hosts
+echo "$HOSTNAME" >>/etc/hostname
+echo "127.0.0.1 localhost" >>/etc/hosts
+echo "::1       localhost" >>/etc/hosts
+echo "127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >>/etc/hosts
+
+PS3="Select processor firmware to install: "
+select FIRM in AMD INTEL BOTH NONE; do
+    case $FIRM in
+    AMD)
+        pacman -S --noconfirm amd-ucode
+        break
+        ;;
+    INTEL)
+        pacman -S --noconfirm intel-ucode
+        break
+        ;;
+    BOTH)
+        pacman -S --noconfirm amd-ucode intel-ucode
+        break
+        ;;
+    NONE)
+        pacman -S --noconfirm amd-ucode intel-ucode
+        break
+        ;;
+    esac
+done
 
 # Additional packages
-#pacman -S amd-ucode iwd acpid acpi acpi_call
-pacman -S --noconfirm amd-ucode efibootmgr grub grub-btrfs base-devel linux-headers git networkmanager wpa_supplicant acpid acpi acpi_call
+pacman -S --noconfirm --needed base-devel linux-headers vim git bash-completion
+pacman -S --noconfirm --needed efibootmgr grub grub-btrfs btrfs-progs
 
 # Loader
 read -p "....Enter EFI directory for GRUB: " EFI_DIR
@@ -49,10 +70,12 @@ passwd $USERNAME
 #echo asokolov:230989 | chpasswd
 echo "....Adding $USERNAME to sudo users: "
 # Sudo
-echo "$USERNAME ALL=(ALL) ALL" >> /etc/sudoers.d/$USERNAME
+echo "$USERNAME ALL=(ALL) ALL" >>/etc/sudoers.d/$USERNAME
 
 # Enable services
+pacman -S --noconfirm --needed networkmanager wpa_supplicant
 systemctl enable NetworkManager
+pacman -S --noconfirm --needed acpid acpi acpi_call
 systemctl enable acpid
 #systemctl enable iwd
 #systemctl enable systemd-networkd
