@@ -72,7 +72,7 @@ fi
 askYesNo "KDE?" true
 if [ "$ANSWER" = true ]; then
     sudo pacman -S --noconfirm --needed xorg xf86-video-vmware pipewire pipewire-pulse pipewire-jack pipewire-alsa pavucontrol
-    sudo pacman -S --noconfirm --needed sddm plasma plasma-wayland-session kde-applications
+    sudo pacman -S --noconfirm --needed sddm plasma plasma-wayland-session kde-applications packagekit-qt5
     sudo systemctl enable sddm
 fi
 # AUR helper
