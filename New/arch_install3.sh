@@ -58,7 +58,7 @@ fi
 # Virtualization
 askYesNo "Virtualization support?" false
 if [ "$ANSWER" = true ]; then
-    sudo pacman -S --noconfirm --needed virt-manager qemu qemu-arch-extra bridge-utilsdnsmasqedk2-ovmf vde2 openbsd-netcat
+    sudo pacman -S --noconfirm --needed virt-manager qemu qemu-arch-extra bridge-utils dnsmasq edk2-ovmf vde2 openbsd-netcat
     sudo systemctl enable libvirtd
 fi
 
