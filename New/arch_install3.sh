@@ -68,10 +68,16 @@ if [ "$ANSWER" = true ]; then
     sudo pacman -S --noconfirm --needed terminus-font ttf-dejavu ttf-liberation ttf-font-awesome
 fi
 
+# Pipewire support
+askYesNo "KDE?" true
+if [ "$ANSWER" = true ]; then
+    sudo pacman -S --noconfirm --needed pipewire pipewire-pulse pipewire-jack pipewire-alsa pavucontrol
+fi
+
 # KDE
 askYesNo "KDE?" true
 if [ "$ANSWER" = true ]; then
-    sudo pacman -S --noconfirm --needed xorg xf86-video-vmware pipewire pipewire-pulse pipewire-jack pipewire-alsa pavucontrol
+    sudo pacman -S --noconfirm --needed xorg xf86-video-vmware
     sudo pacman -S --noconfirm --needed sddm plasma plasma-wayland-session kde-applications packagekit-qt5
     sudo systemctl enable sddm
 fi
