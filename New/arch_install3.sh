@@ -50,7 +50,7 @@ fi
 
 askYesNo "Zero-configuration networking support?" false
 if [ "$ANSWER" = true ]; then
-    sudo pacman -S --noconfirm --needed nss-mdns
+    sudo pacman -S --noconfirm --needed avahi nss-mdns
     sudo systemctl enable avahi-daemon
     sudo systemctl disable systemd-resolved
 fi
