@@ -48,10 +48,12 @@ echo "127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >>/etc/hosts
 
 askYesNo "Install amd-ucode?" true
 if [ "$ANSWER" = true ]; then
+    AMD = true
     pacman -S --noconfirm amd-ucode
 fi
 askYesNo "Install intel-ucode?" true
 if [ "$ANSWER" = true ]; then
+    INTEL = true
     pacman -S --noconfirm intel-ucode
 fi
 
@@ -78,7 +80,12 @@ if [ "$ANSWER" = true ]; then
     touch /efi/loader/entries/arch.conf
     echo "title Arch Linux" >>/efi/loader/entries/arch.conf
     echo "linux /vmlinuz-linux" >>/efi/loader/entries/arch.conf
-    echo "initrd /intel-ucode.img" >>/efi/loader/entries/arch.conf
+    if [ "$AMD" = true ]; then
+        echo "initrd /amd-ucode.img" >>/efi/loader/entries/arch.conf
+    fi
+    if [ "$INTEL" = true ]; then
+        echo "initrd /intel-ucode.img" >>/efi/loader/entries/arch.conf
+    fi
     echo "initrd /initramfs-linux.img" >>/efi/loader/entries/arch.conf
     echo "options root=UUID=$(lsblk -dno UUID $ROOT_PART) rootflags=subvol=@ rw" >>/efi/loader/entries/arch.conf
     systemctl enable systemd-boot-update
