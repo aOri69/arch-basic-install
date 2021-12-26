@@ -57,12 +57,32 @@ fi
 
 # Additional packages
 pacman -S --noconfirm --needed vim git bash-completion
-pacman -S --noconfirm --needed efibootmgr grub grub-btrfs btrfs-progs
+pacman -S --noconfirm --needed efibootmgr btrfs-progs
 
 # Loader
-read -p "....Enter EFI directory for GRUB: " EFI_DIR
-grub-install --target=x86_64-efi --efi-directory=$EFI_DIR --bootloader-id=GRUB
-grub-mkconfig -o /boot/grub/grub.cfg
+askYesNo "Install GRUB bootloader?" true
+if [ "$ANSWER" = true ]; then
+    pacman -S --noconfirm --needed efibootmgr grub grub-btrfs
+    read -p "....Enter EFI directory for GRUB: " EFI_DIR
+    grub-install --target=x86_64-efi --efi-directory=$EFI_DIR --bootloader-id=GRUB
+    grub-mkconfig -o /boot/grub/grub.cfg
+fi
+askYesNo "Install systemd-boot bootloader?" false
+if [ "$ANSWER" = true ]; then
+    read -p "....Enter EFI directory for systemd-boot: " EFI_DIR
+    read -p "....Enter ROOT partition: " ROOT_PART
+    bootctl install
+    rm /efi/loader/loader.conf
+    echo "timeout 3" >>/efi/loader/loader.conf
+    echo "default arch.conf" >>/efi/loader/loader.conf
+    touch /efi/loader/entries/arch.conf
+    echo "title Arch Linux" >>/efi/loader/entries/arch.conf
+    echo "linux /vmlinuz-linux" >>/efi/loader/entries/arch.conf
+    echo "initrd /intel-ucode.img" >>/efi/loader/entries/arch.conf
+    echo "initrd /initramfs-linux.img" >>/efi/loader/entries/arch.conf
+    echo "options root=UUID=$(lsblk -dno UUID $ROOT_PART) rootflags=subvol=@ rw" >>/efi/loader/entries/arch.conf
+    systemctl enable systemd-boot-update
+fi
 
 # Users and passwords
 # Root
@@ -80,10 +100,16 @@ echo "....Adding $USERNAME to sudo users: "
 echo "$USERNAME ALL=(ALL) ALL" >>/etc/sudoers.d/$USERNAME
 
 # Enable services
-pacman -S --noconfirm --needed networkmanager wpa_supplicant
-systemctl enable NetworkManager
-pacman -S --noconfirm --needed acpid acpi acpi_call
-systemctl enable acpid
+askYesNo "Install NetworkManager?" true
+if [ "$ANSWER" = true ]; then
+    pacman -S --noconfirm --needed networkmanager wpa_supplicant
+    systemctl enable NetworkManager
+fi
+askYesNo "Install ACPI daemon?" true
+if [ "$ANSWER" = true ]; then
+    pacman -S --noconfirm --needed acpid acpi acpi_call
+    systemctl enable acpid
+fi
 #systemctl enable iwd
 #systemctl enable systemd-networkd
 #systemctl enable systemd-resolved
