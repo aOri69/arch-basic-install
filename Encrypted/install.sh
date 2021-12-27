@@ -18,11 +18,12 @@ PS3='Please select the disk to install: '
 #(lsblk -d | tail -n+2 | awk '{print $1" "$4}')
 #$(lsblk -d | tail -n+2 | cut -d" " -f1)
 disks=($(ls -d /dev/disk/by-id/* | grep -v part))
+DISK=""
 select opt in "${disks[@]}"; do
     #DISK=/dev/$opt
+    DISK=$opt
     break
 done
-DISK=$opt
 
 # Mountpoint
 #INST_MNT=$(mktemp -d)
