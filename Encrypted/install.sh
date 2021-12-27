@@ -146,6 +146,19 @@ mkswap $INST_MNT/swap/swapfile
 echo /swap/swapfile none swap defaults 0 0 >>$INST_MNT/etc/fstab
 # Host name:
 echo $INST_HOST >$INST_MNT/etc/hostname
+# Configure the network interface: Find the interface name:
+ip link
+#Store it in a variable:
+INET=enp1s0
+#Create network configuration:
+tee $INST_MNT/etc/systemd/network/20-default.network <<EOF
+
+[Match]
+Name=$INET
+
+[Network]
+DHCP=yes
+EOF
 # Timezone:
 ln -sf $INST_TZ $INST_MNT/etc/localtime
 hwclock --systohc
