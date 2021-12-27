@@ -37,6 +37,7 @@ sgdisk -n1:1M:+512M -t1:EF00 $DISK
 # Create main partition:
 sgdisk -n2:0:0 $DISK
 
+sleep 5
 # cryptsetup mapper
 # This naming scheme is taken from Debian installer
 boot_partuuid=$(blkid -s PARTUUID -o value $DISK-part2)
