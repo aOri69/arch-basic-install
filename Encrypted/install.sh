@@ -149,7 +149,7 @@ echo $INST_HOST >$INST_MNT/etc/hostname
 # Configure the network interface: Find the interface name:
 ip link
 #Store it in a variable:
-INET=enp1s0
+read -p "....Enter interface name to configure: " INET
 #Create network configuration:
 tee $INST_MNT/etc/systemd/network/20-default.network <<EOF
 
