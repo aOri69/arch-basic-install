@@ -38,11 +38,14 @@ sgdisk -n2:0:0 $DISK
 
 # cryptsetup mapper
 # This naming scheme is taken from Debian installer
-#boot_partuuid=`blkid -s PARTUUID -o value $DISK-part2`
-#boot_mapper_name=cryptroot-luks1-partuuid-$boot_partuuid
-boot_mapper_name=cryptroot
+boot_partuuid=$(blkid -s PARTUUID -o value $DISK-part2)
+boot_mapper_name=cryptroot-luks1-partuuid-$boot_partuuid
 boot_mapper_path=/dev/mapper/$boot_mapper_name
 
+echo $boot_partuuid
+echo $boot_mapper_name
+echo $boot_mapper_path
+sleep 5
 # Format and open LUKS container
 cryptsetup luksFormat --type luks1 $DISK-part2
 cryptsetup open $DISK-part2 $boot_mapper_name
