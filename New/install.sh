@@ -109,7 +109,7 @@ done
 # Format and mount EFI partition
 ESP_PATH=$INST_MNT/boot/efi
 mkfs.vfat -n EFI $BOOT_PATH
-mkdir -p $EFI_PATH
+mkdir -p $ESP_PATH
 mount $BOOT_PATH $ESP_PATH
 
 # Packages
