@@ -1,0 +1,14 @@
+[Unit]
+Description=Starts docker container for the kodi mariadb
+Wants=docker.service
+After=docker.service
+After=network.target
+
+[Service]
+ExecStartPre=/usr/bin/docker-compose -f /root/docker/kodi/kodi.yml down
+ExecStart=/usr/bin/docker-compose -f /root/docker/kodi/kodi.yml up
+ExecStop=/usr/bin/docker-compose -f /root/docker/kodi/kodi.yml down
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

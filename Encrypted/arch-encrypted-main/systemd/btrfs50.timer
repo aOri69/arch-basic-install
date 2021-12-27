@@ -1,0 +1,10 @@
+[Unit]
+Description=Cleanup BTRFS once a week
+Documentation=man:btrfs
+
+[Timer]
+OnCalendar=weekly
+AccuracySec=1h
+
+[Install]
+WantedBy=timers.target

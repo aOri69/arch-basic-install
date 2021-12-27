@@ -1,0 +1,16 @@
+#!/bin/bash
+days_ago() {
+  d1=$(date +%s)
+  d2=$(date -d $1 +%s)
+  echo $(( (d1 - d2) / 86400 ))
+}
+keep=14
+for d in $(ls -dc1 /.snapshots/root/*/ | sort -r); do
+  age=$(days_ago $(basename "$d"))
+  echo $age
+  if [ $age -lt $keep ]; then
+    echo skipping recent $d
+  else
+    btrfs subvolume delete "$d"
+  fi
+done

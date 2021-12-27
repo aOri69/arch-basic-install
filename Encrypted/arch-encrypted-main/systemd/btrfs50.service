@@ -1,0 +1,7 @@
+[Unit]
+Description=Cleanup BTRFS unused blocks
+Documentation=man:dirvish
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/btrfs balance start -musage=50 -dusage=50 /

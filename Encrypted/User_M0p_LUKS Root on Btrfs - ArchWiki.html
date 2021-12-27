@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs -->
+<html class="client-js vector-animations-ready" lang="en" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>User:M0p/LUKS Root on Btrfs - ArchWiki</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"0af068c3c5a59f6c319ad4eb","wgCSPNonce":!1,"wgCanonicalNamespace":"User","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":2,"wgPageName":"User:M0p/LUKS_Root_on_Btrfs","wgTitle":"M0p/LUKS Root on Btrfs","wgCurRevisionId":686327,"wgRevisionId":686327,"wgArticleId":32083,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Pages or sections flagged with Template:Unsupported"],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"User:M0p/LUKS_Root_on_Btrfs","wgRelevantArticleId":32083,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],
+"wgRestrictionMove":[],"wgRelevantUserName":"M0p","wgRedirectedFrom":"User:I2Oc9/Root_on_Btrfs_with_LUKS_full_disk_encryption","wgInternalRedirectTargetUrl":"/title/User:M0p/LUKS_Root_on_Btrfs"};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"loading","mediawiki.ui.button":"ready","skins.vector.styles":"ready","skins.vector.icons":"ready","mediawiki.ui.icon":"ready","zzz.ext.archLinux.styles":"ready"};RLPAGEMODULES=["mediawiki.action.view.redirect","site","mediawiki.page.ready","mediawiki.toc","skins.vector.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="./User_M0p_LUKS Root on Btrfs - ArchWiki_files/load.php">
+<script async="" src="./User_M0p_LUKS Root on Btrfs - ArchWiki_files/load(1).php"></script>
+<style>
+@media screen {
+	.toctoggle{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;font-size:94%}}</style><meta name="ResourceLoaderDynamicStyles" content="">
+<link rel="stylesheet" href="./User_M0p_LUKS Root on Btrfs - ArchWiki_files/load(2).php">
+<meta name="generator" content="MediaWiki 1.37.1">
+<meta name="referrer" content="no-referrer-when-downgrade">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, minimum-scale=0.25, maximum-scale=5.0">
+<link rel="shortcut icon" href="https://wiki.archlinux.org/favicon.ico">
+<link rel="search" type="application/opensearchdescription+xml" href="https://wiki.archlinux.org/opensearch_desc.php" title="ArchWiki (en)">
+<link rel="EditURI" type="application/rsd+xml" href="https://wiki.archlinux.org/api.php?action=rsd">
+<link rel="license" href="http://www.gnu.org/copyleft/fdl.html">
+<link rel="alternate" type="application/atom+xml" title="ArchWiki Atom feed" href="https://wiki.archlinux.org/index.php?title=Special:RecentChanges&amp;feed=atom">
+<link rel="canonical" href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs">
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-2 ns-subject page-User_M0p_LUKS_Root_on_Btrfs rootpage-User_M0p skin-vector action-view skin--responsive skin-vector-search-vue"><div id="archnavbar" class="noprint">
+    <div id="archnavbarlogo">
+        <p><a id="logo" href="https://www.archlinux.org/"></a></p>
+    </div>
+    <div id="archnavbarmenu">
+        <ul id="archnavbarlist">
+                        <li id="anb-home"><a href="https://www.archlinux.org/">Home</a></li>            <li id="anb-packages"><a href="https://www.archlinux.org/packages/">Packages</a></li>            <li id="anb-forums"><a href="https://bbs.archlinux.org/">Forums</a></li>            <li id="anb-wiki" class="anb-selected"><a href="https://wiki.archlinux.org/">Wiki</a></li>            <li id="anb-bugs"><a href="https://bugs.archlinux.org/">Bugs</a></li>            <li id="anb-security"><a href="https://security.archlinux.org/">Security</a></li>            <li id="anb-aur"><a href="https://aur.archlinux.org/">AUR</a></li>            <li id="anb-download"><a href="https://www.archlinux.org/download/">Download</a></li>        </ul>
+    </div>
+</div>
+<div class="mw-page-container">
+	<a class="mw-jump-link" href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#content">Jump to content</a>
+	<div class="mw-page-container-inner">
+
+<input type="checkbox" id="mw-sidebar-checkbox" class="mw-checkbox-hack-checkbox">
+
+<header class="mw-header">
+	<label id="mw-sidebar-button" class="mw-checkbox-hack-button mw-ui-icon mw-ui-button mw-ui-quiet mw-ui-icon-element" for="mw-sidebar-checkbox" role="button" aria-controls="mw-panel" data-event-name="ui.sidebar" tabindex="0" title="Main menu" aria-expanded="false">
+		Toggle sidebar
+	</label>
+	<a href="https://wiki.archlinux.org/title/Main_page" class="mw-logo">
+		<span class="mw-logo-container">
+			<strong class="mw-logo-wordmark">ArchWiki</strong>
+		</span>
+	</a>
+	<div id="p-search" role="search" class="vector-search-box vector-search-box-collapses vector-search-box-show-thumbnail">
+	<div>
+		<h3>
+			<label for="searchInput">Search</label>
+		</h3>
+		<form action="https://wiki.archlinux.org/index.php" id="searchform">
+			<div id="simpleSearch" data-search-loc="header-moved">
+				<input type="search" name="search" placeholder="Search ArchWiki" autocapitalize="sentences" accesskey="f" id="searchInput" autocomplete="off">
+				<input type="hidden" name="title" value="Special:Search">
+				<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton">
+				<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton">
+			</div>
+		</form>
+	</div>
+	<a href="https://wiki.archlinux.org/title/Special:Search" id="" class="mw-ui-button mw-ui-quiet mw-ui-icon mw-ui-icon-element mw-ui-icon-wikimedia-search search-toggle">
+		
+		<span>Search</span>
+	</a>
+	
+</div>
+
+	<div class="vector-user-links">
+	<nav id="p-personal-more" class="mw-portlet mw-portlet-personal-more vector-menu vector-user-menu-more" aria-labelledby="p-personal-more-label" role="navigation">
+	<h3 id="p-personal-more-label" class="vector-menu-heading"> <span>User links</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list">
+	<li id="p-createaccount" class="user-links-collapsible-item">
+		<a href="https://wiki.archlinux.org/index.php?title=Special:CreateAccount&amp;returnto=User%3AM0p%2FLUKS+Root+on+Btrfs" icon="userAvatar" class="mw-ui-button mw-ui-quiet" title="You are encouraged to create an account and log in; however, it is not mandatory"><span>Create account</span></a>
+	</li>
+</ul>
+		
+	</div>
+</nav>
+
+	<nav id="p-personal" class="mw-portlet mw-portlet-personal emptyPortlet vector-user-menu vector-user-menu-logged-out vector-menu vector-menu-dropdown" aria-labelledby="p-personal-label" role="navigation" title="More options">
+	<input type="checkbox" id="p-personal-checkbox" role="button" aria-haspopup="true" data-event-name="ui.dropdown-p-personal" class=" vector-menu-checkbox" aria-labelledby="p-personal-label">
+	<h3 id="p-personal-label" class="vector-menu-heading mw-ui-button mw-ui-quiet mw-ui-icon mw-ui-icon-element mw-ui-icon-wikimedia-ellipsis"> <span>Personal tools</span>
+			<span class="vector-menu-checkbox-expanded">expanded</span>
+			<span class="vector-menu-checkbox-collapsed">collapsed</span>
+	</h3>
+	<div class="vector-menu-content">
+		<div class="vector-user-menu-create-account"><a href="https://wiki.archlinux.org/index.php?title=Special:CreateAccount&amp;returnto=User%3AM0p%2FLUKS+Root+on+Btrfs" icon="userAvatar" class="user-links-collapsible-item vector-menu-content-item mw-ui-icon mw-ui-icon-before mw-ui-icon-wikimedia-userAvatar" title="You are encouraged to create an account and log in; however, it is not mandatory"><span>Create account</span></a></div>
+<div class="vector-user-menu-login"><a href="https://wiki.archlinux.org/index.php?title=Special:UserLogin&amp;returnto=User%3AM0p%2FLUKS+Root+on+Btrfs" icon="logIn" class="vector-menu-content-item vector-menu-content-item-login mw-ui-icon mw-ui-icon-before mw-ui-icon-wikimedia-logIn" title="You are encouraged to log in; however, it is not mandatory [alt-shift-o]" accesskey="o"><span>Log in</span></a></div>
+<div class="vector-user-menu-anon-editor">
+	<p>
+		Pages for logged out editors <a href="https://wiki.archlinux.org/title/Help:Introduction" aria-label="Learn more about editing"><span>learn more</span></a>
+	</p>
+</div>
+
+		<ul class="vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+</div>
+
+</header>
+<div class="mw-workspace-container">
+	<div id="mw-navigation">
+		<h2>Navigation menu</h2>
+		
+<div id="mw-panel" class="mw-sidebar">
+	<nav id="p-navigation" class="mw-portlet mw-portlet-navigation vector-menu vector-menu-portal portal" aria-labelledby="p-navigation-label" role="navigation">
+	<h3 id="p-navigation-label" class="vector-menu-heading"> <span>Navigation</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="n-mainpage-description" class="mw-list-item"><a href="https://wiki.archlinux.org/title/Main_page" title="Visit the main page [alt-shift-z]" accesskey="z"><span>Main page</span></a></li><li id="n-Table-of-contents" class="mw-list-item"><a href="https://wiki.archlinux.org/title/Table_of_contents"><span>Table of contents</span></a></li><li id="n-portal" class="mw-list-item"><a href="https://wiki.archlinux.org/title/Getting_involved" title="Various ways Archers can contribute to the community"><span>Getting involved</span></a></li><li id="n-currentevents" class="mw-list-item"><a href="https://wiki.archlinux.org/title/ArchWiki:News" title="The latest lowdown on the wiki"><span>Wiki news</span></a></li><li id="n-randompage" class="mw-list-item"><a href="https://wiki.archlinux.org/title/Special:Random" title="Load a random page [alt-shift-x]" accesskey="x"><span>Random page</span></a></li></ul>
+		
+	</div>
+</nav>
+
+	<nav id="p-Interaction" class="mw-portlet mw-portlet-Interaction vector-menu vector-menu-portal portal" aria-labelledby="p-Interaction-label" role="navigation">
+	<h3 id="p-Interaction-label" class="vector-menu-heading"> <span>Interaction</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="n-help" class="mw-list-item"><a href="https://wiki.archlinux.org/title/Category:Help" title="Wiki navigation, reading, and editing help"><span>Help</span></a></li><li id="n-Contributing" class="mw-list-item"><a href="https://wiki.archlinux.org/title/ArchWiki:Contributing"><span>Contributing</span></a></li><li id="n-recentchanges" class="mw-list-item"><a href="https://wiki.archlinux.org/title/Special:RecentChanges" title="A list of recent changes in the wiki [alt-shift-r]" accesskey="r"><span>Recent changes</span></a></li><li id="n-Recent-talks" class="mw-list-item"><a href="https://wiki.archlinux.org/index.php?title=Special:RecentChanges&amp;namespace=all-discussions" rel="nofollow"><span>Recent talks</span></a></li><li id="n-newpages" class="mw-list-item"><a href="https://wiki.archlinux.org/title/Special:NewPages"><span>New pages</span></a></li><li id="n-Statistics" class="mw-list-item"><a href="https://wiki.archlinux.org/title/ArchWiki:Statistics"><span>Statistics</span></a></li><li id="n-Requests" class="mw-list-item"><a href="https://wiki.archlinux.org/title/ArchWiki_talk:Requests"><span>Requests</span></a></li></ul>
+		
+	</div>
+</nav>
+<nav id="p-tb" class="mw-portlet mw-portlet-tb vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation">
+	<h3 id="p-tb-label" class="vector-menu-heading"> <span>Tools</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere" class="mw-list-item"><a href="https://wiki.archlinux.org/title/Special:WhatLinksHere/User:M0p/LUKS_Root_on_Btrfs" title="A list of all wiki pages that link here [alt-shift-j]" accesskey="j"><span>What links here</span></a></li><li id="t-recentchangeslinked" class="mw-list-item"><a href="https://wiki.archlinux.org/title/Special:RecentChangesLinked/User:M0p/LUKS_Root_on_Btrfs" rel="nofollow" title="Recent changes in pages linked from this page [alt-shift-k]" accesskey="k"><span>Related changes</span></a></li><li id="t-contributions" class="mw-list-item"><a href="https://wiki.archlinux.org/title/Special:Contributions/M0p" title="A list of contributions by this user"><span>User contributions</span></a></li><li id="t-log" class="mw-list-item"><a href="https://wiki.archlinux.org/title/Special:Log/M0p"><span>Logs</span></a></li><li id="t-userrights" class="mw-list-item"><a href="https://wiki.archlinux.org/title/Special:UserRights/M0p"><span>View user groups</span></a></li><li id="t-specialpages" class="mw-list-item"><a href="https://wiki.archlinux.org/title/Special:SpecialPages" title="A list of all special pages [alt-shift-q]" accesskey="q"><span>Special pages</span></a></li><li id="t-print" class="mw-list-item"><a href="javascript:print();" rel="alternate" title="Printable version of this page [alt-shift-p]" accesskey="p"><span>Printable version</span></a></li><li id="t-permalink" class="mw-list-item"><a href="https://wiki.archlinux.org/index.php?title=User:M0p/LUKS_Root_on_Btrfs&amp;oldid=686327" title="Permanent link to this revision of the page"><span>Permanent link</span></a></li><li id="t-info" class="mw-list-item"><a href="https://wiki.archlinux.org/index.php?title=User:M0p/LUKS_Root_on_Btrfs&amp;action=info" title="More information about this page"><span>Page information</span></a></li></ul>
+		
+	</div>
+</nav>
+
+	
+</div>
+
+		<div id="mw-head">
+			<div class="mw-article-toolbar-container">
+				<div id="left-navigation">
+					<nav id="p-namespaces" class="mw-portlet mw-portlet-namespaces vector-menu vector-menu-tabs" aria-labelledby="p-namespaces-label" role="navigation">
+	<h3 id="p-namespaces-label" class="vector-menu-heading"> <span>Namespaces</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="ca-nstab-user" class="selected mw-list-item"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs" title="View the user page [alt-shift-c]" accesskey="c"><span>User page</span></a></li><li id="ca-talk" class="mw-list-item"><a href="https://wiki.archlinux.org/title/User_talk:M0p/LUKS_Root_on_Btrfs" rel="discussion" title="Discussion about the content page [alt-shift-t]" accesskey="t"><span>Discussion</span></a></li></ul>
+		
+	</div>
+</nav>
+
+					<nav id="p-variants" class="mw-portlet mw-portlet-variants emptyPortlet vector-menu-dropdown-noicon vector-menu vector-menu-dropdown" aria-labelledby="p-variants-label" role="navigation">
+	<input type="checkbox" id="p-variants-checkbox" role="button" aria-haspopup="true" data-event-name="ui.dropdown-p-variants" class=" vector-menu-checkbox" aria-labelledby="p-variants-label">
+	<h3 id="p-variants-label" class="vector-menu-heading"> <span>Variants</span>
+			<span class="vector-menu-checkbox-expanded">expanded</span>
+			<span class="vector-menu-checkbox-collapsed">collapsed</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+				</div>
+				<div id="right-navigation">
+					<nav id="p-views" class="mw-portlet mw-portlet-views vector-menu vector-menu-tabs" aria-labelledby="p-views-label" role="navigation">
+	<h3 id="p-views-label" class="vector-menu-heading"> <span>Views</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"><li id="ca-view" class="selected mw-list-item collapsible"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs"><span>Read</span></a></li><li id="ca-viewsource" class="mw-list-item collapsible"><a href="https://wiki.archlinux.org/index.php?title=User:M0p/LUKS_Root_on_Btrfs&amp;action=edit" title="This page is protected.
+You can view its source [alt-shift-e]" accesskey="e"><span>View source</span></a></li><li id="ca-history" class="mw-list-item collapsible"><a href="https://wiki.archlinux.org/index.php?title=User:M0p/LUKS_Root_on_Btrfs&amp;action=history" title="Past revisions of this page [alt-shift-h]" accesskey="h"><span>View history</span></a></li></ul>
+		
+	</div>
+</nav>
+
+					<nav id="p-cactions" class="mw-portlet mw-portlet-cactions emptyPortlet vector-menu-dropdown-noicon vector-menu vector-menu-dropdown" aria-labelledby="p-cactions-label" role="navigation" title="More options">
+	<input type="checkbox" id="p-cactions-checkbox" role="button" aria-haspopup="true" data-event-name="ui.dropdown-p-cactions" class=" vector-menu-checkbox" aria-labelledby="p-cactions-label">
+	<h3 id="p-cactions-label" class="vector-menu-heading"> <span>More</span>
+			<span class="vector-menu-checkbox-expanded">expanded</span>
+			<span class="vector-menu-checkbox-collapsed">collapsed</span>
+	</h3>
+	<div class="vector-menu-content">
+		
+		<ul class="vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="mw-content-container">
+<main id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice"></div>
+
+	<div class="mw-indicators">
+	</div>
+	<h1 id="firstHeading" class="firstHeading">User:M0p/LUKS Root on Btrfs</h1>
+
+
+	<div id="bodyContent" class="vector-body">
+			<div id="siteSub" class="noprint">From ArchWiki</div>
+		<div id="contentSub"><span class="subpages">&lt; <a href="https://wiki.archlinux.org/title/User:M0p" title="User:M0p">User:M0p</a></span><span class="mw-redirectedfrom">(Redirected from <a href="https://wiki.archlinux.org/index.php?title=User:I2Oc9/Root_on_Btrfs_with_LUKS_full_disk_encryption&amp;redirect=no" class="mw-redirect" title="User:I2Oc9/Root on Btrfs with LUKS full disk encryption">User:I2Oc9/Root on Btrfs with LUKS full disk encryption</a>)</span></div>
+		<div id="contentSub2"></div>
+		
+		<div id="mw-content-text" class="mw-body-content mw-content-ltr" lang="en" dir="ltr"><div class="mw-parser-output"><div class="noprint archwiki-template-message">
+<p><a href="https://wiki.archlinux.org/title/File:Tango-emblem-important.png" class="image"><img alt="Tango-emblem-important.png" src="./User_M0p_LUKS Root on Btrfs - ArchWiki_files/Tango-emblem-important.png" decoding="async" width="48" height="48"></a><b>This article is not officially supported.</b><a href="https://wiki.archlinux.org/title/File:Tango-emblem-important.png" class="image"><img alt="Tango-emblem-important.png" src="./User_M0p_LUKS Root on Btrfs - ArchWiki_files/Tango-emblem-important.png" decoding="async" width="48" height="48"></a></p>
+<div>The Arch Linux community does not offer support for the information contained in this page; for installation procedures, the <a href="https://wiki.archlinux.org/title/Installation_guide" title="Installation guide">Installation guide</a> is the only officially supported document. The content below is mainly maintained by <a href="https://wiki.archlinux.org/title/User:M0p" title="User:M0p">User:M0p</a>, who last reviewed it on 10 February 2021, and it may be out of date or inaccurate.</div>
+</div>
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none"><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Notes"><span class="tocnumber">1</span> <span class="toctext">Notes</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Data_integrity"><span class="tocnumber">1.1</span> <span class="toctext">Data integrity</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-3"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Preinstallation"><span class="tocnumber">2</span> <span class="toctext">Preinstallation</span></a>
+<ul>
+<li class="toclevel-2 tocsection-4"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#SSH_server"><span class="tocnumber">2.1</span> <span class="toctext">SSH server</span></a></li>
+<li class="toclevel-2 tocsection-5"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Select_mirror"><span class="tocnumber">2.2</span> <span class="toctext">Select mirror</span></a></li>
+<li class="toclevel-2 tocsection-6"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Tools"><span class="tocnumber">2.3</span> <span class="toctext">Tools</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-7"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Variables"><span class="tocnumber">3</span> <span class="toctext">Variables</span></a>
+<ul>
+<li class="toclevel-2 tocsection-8"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Timezone"><span class="tocnumber">3.1</span> <span class="toctext">Timezone</span></a></li>
+<li class="toclevel-2 tocsection-9"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Host_name"><span class="tocnumber">3.2</span> <span class="toctext">Host name</span></a></li>
+<li class="toclevel-2 tocsection-10"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Kernel_variant"><span class="tocnumber">3.3</span> <span class="toctext">Kernel variant</span></a></li>
+<li class="toclevel-2 tocsection-11"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Target_disk"><span class="tocnumber">3.4</span> <span class="toctext">Target disk</span></a></li>
+<li class="toclevel-2 tocsection-12"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Mountpoint"><span class="tocnumber">3.5</span> <span class="toctext">Mountpoint</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-13"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Format_and_Partition"><span class="tocnumber">4</span> <span class="toctext">Format and Partition</span></a></li>
+<li class="toclevel-1 tocsection-14"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#cryptsetup_mapper"><span class="tocnumber">5</span> <span class="toctext">cryptsetup mapper</span></a></li>
+<li class="toclevel-1 tocsection-15"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Format_and_open_LUKS_container"><span class="tocnumber">6</span> <span class="toctext">Format and open LUKS container</span></a></li>
+<li class="toclevel-1 tocsection-16"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Format_the_LUKS_container_as_Btrfs"><span class="tocnumber">7</span> <span class="toctext">Format the LUKS container as Btrfs</span></a></li>
+<li class="toclevel-1 tocsection-17"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Create_subvolumes"><span class="tocnumber">8</span> <span class="toctext">Create subvolumes</span></a></li>
+<li class="toclevel-1 tocsection-18"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Mount_subvolumes"><span class="tocnumber">9</span> <span class="toctext">Mount subvolumes</span></a></li>
+<li class="toclevel-1 tocsection-19"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Disable_Copy-on-Write"><span class="tocnumber">10</span> <span class="toctext">Disable Copy-on-Write</span></a></li>
+<li class="toclevel-1 tocsection-20"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Format_and_mount_EFI_partition"><span class="tocnumber">11</span> <span class="toctext">Format and mount EFI partition</span></a></li>
+<li class="toclevel-1 tocsection-21"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Packages"><span class="tocnumber">12</span> <span class="toctext">Packages</span></a></li>
+<li class="toclevel-1 tocsection-22"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#System_Configuration"><span class="tocnumber">13</span> <span class="toctext">System Configuration</span></a></li>
+<li class="toclevel-1 tocsection-23"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#GRUB_installation"><span class="tocnumber">14</span> <span class="toctext">GRUB installation</span></a>
+<ul>
+<li class="toclevel-2 tocsection-24"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#EFI"><span class="tocnumber">14.1</span> <span class="toctext">EFI</span></a></li>
+<li class="toclevel-2 tocsection-25"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#BIOS"><span class="tocnumber">14.2</span> <span class="toctext">BIOS</span></a></li>
+<li class="toclevel-2 tocsection-26"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Generate_GRUB_menu"><span class="tocnumber">14.3</span> <span class="toctext">Generate GRUB menu</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-27"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Finish_Installation"><span class="tocnumber">15</span> <span class="toctext">Finish Installation</span></a></li>
+<li class="toclevel-1 tocsection-28"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Create_root_filesystem_snapshot"><span class="tocnumber">16</span> <span class="toctext">Create root filesystem snapshot</span></a></li>
+<li class="toclevel-1 tocsection-29"><a href="https://wiki.archlinux.org/title/User:M0p/LUKS_Root_on_Btrfs#Rollback_root_filesystem"><span class="tocnumber">17</span> <span class="toctext">Rollback root filesystem</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Notes">Notes</span></h2>
+<p>Fully encrypted Arch Linux setup. Everything except EFI system partition (contains a single <code>grubx64.efi</code> file) and BIOS boot sector is encrypted with LUKS 1.
+</p><p>Only single disk installation is supported. Consider <a rel="nofollow" class="external text" href="https://openzfs.github.io/openzfs-docs/Getting%20Started/Arch%20Linux/Arch%20Linux%20Root%20on%20ZFS.html">Root on ZFS</a> if you want to use a multi-disk setup.
+</p><p>Btrfs also has quite some pitfalls, gotchas and limitations. See <a rel="nofollow" class="external autonumber" href="https://wiki.debian.org/Btrfs">[1]</a>, <a rel="nofollow" class="external autonumber" href="https://btrfs.wiki.kernel.org/index.php/Main_Page">[2]</a> and search reddit for posts involving crashed btrfs filesystems. If uncertain, use <a rel="nofollow" class="external text" href="https://openzfs.github.io/openzfs-docs/Getting%20Started/Arch%20Linux/Arch%20Linux%20Root%20on%20ZFS.html">Root on ZFS</a>. I use Root on ZFS on my laptop.
+</p><p><b>Existing data on target disk will be destroyed.</b>
+</p><p>Password <b>MUST BE</b> interactively entered at boot and can not be automated. Efforts to automate this for the cloud exist, see <a rel="nofollow" class="external autonumber" href="https://blog.hansenpartnership.com/building-encrypted-images-for-confidential-computing/">[3]</a>.
+</p><p>For support and questions, leave a message on <a href="https://wiki.archlinux.org/title/User_talk:M0p/LUKS_Root_on_Btrfs" title="User talk:M0p/LUKS Root on Btrfs">User_talk:M0p/LUKS_Root_on_Btrfs</a>.
+</p>
+<h3><span class="mw-headline" id="Data_integrity">Data integrity</span></h3>
+<p>It should be noted that, with only one disk, data are not redundant and not protected from bitrot.
+</p><p>For best data integrity and redundancy, you can either:
+</p>
+<ul><li>minimum 2 disks: use Root on ZFS with mirror/raidz2/raidz3, or</li>
+<li>minimum 3 disks: use single disk Root on Btrfs, but store important data on ZFS with mirror/raidz2/raidz3</li></ul>
+<h2><span class="mw-headline" id="Preinstallation">Preinstallation</span></h2>
+<p>Follow official installation guide up to <a href="https://wiki.archlinux.org/title/Installation_guide#Boot_the_live_environment" title="Installation guide">Installation_guide#Boot_the_live_environment</a>.
+</p><p>Connect to the internet. If the target computer aquires IP address with DHCP, no further steps need to be taken. Otherwise, refer to <a rel="nofollow" class="external text" href="https://wiki.archlinux.org/index.php/Network_configuration">Network Configuration</a> wiki page.
+</p>
+<h3><span class="mw-headline" id="SSH_server">SSH server</span></h3>
+<p>Interactively set root password with:
+</p>
+<pre>passwd</pre>
+<p>Start SSH server:
+</p>
+<pre>systemctl start sshd</pre>
+<p>Find the IP address of the target computer:
+</p>
+<pre>ip -4 address show scope global</pre>
+<p>On another computer, connect to the target computer with:
+</p>
+<pre>ssh root@192.168.1.10</pre>
+<p>Enter a bash shell:
+</p>
+<pre>bash</pre>
+<h3><span class="mw-headline" id="Select_mirror">Select mirror</span></h3>
+<p>Kill <code>reflector</code>:
+</p>
+<pre>killall -9 reflector</pre>
+<p>Edit the following files:
+</p>
+<pre>/etc/pacman.d/mirrorlist</pre>
+<p>Uncomment and move mirrors to the beginning of the file.
+</p>
+<h3><span class="mw-headline" id="Tools">Tools</span></h3>
+<pre>pacman -Sy --needed cryptsetup btrfs-progs gdisk
+</pre>
+<h2><span class="mw-headline" id="Variables">Variables</span></h2>
+<p>In this part, we will set some variables to configure the system.
+</p>
+<h3><span class="mw-headline" id="Timezone">Timezone</span></h3>
+<p>List the available timezones with:
+</p>
+<pre>ls /usr/share/zoneinfo/</pre>
+<p>Store the target timezone in a variable:
+</p>
+<pre>INST_TZ=/usr/share/zoneinfo/Asia/Irkutsk</pre>
+<h3><span class="mw-headline" id="Host_name">Host name</span></h3>
+<p>Store the host name in a variable:
+</p>
+<pre>INST_HOST='localhost'</pre>
+<h3><span class="mw-headline" id="Kernel_variant">Kernel variant</span></h3>
+<p>Store the kernel variant in a variable. Available variants in official repo are:
+</p>
+<ul><li>linux</li>
+<li>linux-lts</li>
+<li>linux-zen</li>
+<li>linux-hardened</li></ul>
+<pre>INST_LINVAR='linux'</pre>
+<h3><span class="mw-headline" id="Target_disk">Target disk</span></h3>
+<p>List the available disks with:
+</p>
+<pre>ls -d /dev/disk/by-id/* | grep -v part</pre>
+<p>If the disk is not in the command output, use <code>/dev/disk/by-path</code>.
+</p><p>Store the target disk in a variable:
+</p>
+<pre>DISK=/dev/disk/by-id/nvme-foo_NVMe_bar_512GB</pre>
+<h3><span class="mw-headline" id="Mountpoint">Mountpoint</span></h3>
+<pre>INST_MNT=$(mktemp -d)</pre>
+<h2><span class="mw-headline" id="Format_and_Partition">Format and Partition</span></h2>
+<p>Clear the partition table:
+</p>
+<pre>sgdisk --zap-all $DISK</pre>
+<p>Create EFI system partition (for use now or in the future):
+</p>
+<pre>sgdisk -n1:1M:+1G -t1:EF00 $DISK</pre>
+<p>Create BIOS boot partition, skip if you don't use this:
+</p>
+<pre>sgdisk -a1 -n5:24K:+1000K -t5:EF02 $DISK</pre>
+<p>Create main partition:
+</p>
+<pre>sgdisk -n2:0:0   $DISK
+</pre>
+<h2><span class="mw-headline" id="cryptsetup_mapper">cryptsetup mapper</span></h2>
+<p>This naming scheme is taken from Debian installer
+</p>
+<pre>boot_partuuid=`blkid -s PARTUUID -o value $DISK-part2`
+boot_mapper_name=cryptroot-luks1-partuuid-$boot_partuuid
+boot_mapper_path=/dev/mapper/$boot_mapper_name
+</pre>
+<h2><span class="mw-headline" id="Format_and_open_LUKS_container">Format and open LUKS container</span></h2>
+<pre>cryptsetup luksFormat --type luks1 $DISK-part2
+cryptsetup open $DISK-part2 $boot_mapper_name
+</pre>
+<h2><span class="mw-headline" id="Format_the_LUKS_container_as_Btrfs">Format the LUKS container as Btrfs</span></h2>
+<pre>mkfs.btrfs $boot_mapper_path
+mount $boot_mapper_path $INST_MNT
+</pre>
+<h2><span class="mw-headline" id="Create_subvolumes">Create subvolumes</span></h2>
+<p>The idea is to separate persistent data from root file system rollbacks.
+</p><p>System is installed to snapshot 0.
+</p>
+<pre style="white-space: pre !important; font-variant-ligatures: no-common-ligatures;">cd $INST_MNT
+
+btrfs subvolume create @
+mkdir @/0
+btrfs subvolume create @/0/snapshot
+
+for i in {home,root,srv,usr,usr/local,swap,var};
+do btrfs subvolume create @$i;
+done
+
+# exclude these dirs under /var from system snapshot
+for i in {tmp,spool,log};
+do btrfs subvolume create @var/$i;
+done
+</pre>
+<h2><span class="mw-headline" id="Mount_subvolumes">Mount subvolumes</span></h2>
+<pre style="white-space: pre !important; font-variant-ligatures: no-common-ligatures;">cd ~
+umount $INST_MNT
+mount $boot_mapper_path $INST_MNT -o subvol=/@/0/snapshot,compress-force=zstd,noatime,space_cache=v2
+
+mkdir -p $INST_MNT/{.snapshots,home,root,srv,tmp,usr/local,swap}
+
+mkdir -p $INST_MNT/var/{tmp,spool,log}
+mount $boot_mapper_path $INST_MNT/.snapshots/ -o subvol=@,compress-force=zstd,noatime,space_cache=v2
+
+# mount subvolumes
+# separate /{home,root,srv,swap,usr/local} from root filesystem
+for i in {home,root,srv,swap,usr/local};
+do mount $boot_mapper_path $INST_MNT/$i -o subvol=@$i,compress-force=zstd,noatime,space_cache=v2;
+done
+
+# separate /var/{tmp,spool,log} from root filesystem
+for i in {tmp,spool,log};
+do mount $boot_mapper_path $INST_MNT/var/$i -o subvol=@var/$i,compress-force=zstd,noatime,space_cache=v2;
+done
+</pre>
+<p>// <i>WARNING: NOT USE /usr as dedicated mountpoint - it's road to FAIL at boot.</i> 
+</p>
+<h2><span class="mw-headline" id="Disable_Copy-on-Write">Disable Copy-on-Write</span></h2>
+<pre>for i in {swap,};
+do chattr +C $INST_MNT/$i;
+done
+</pre>
+<h2><span class="mw-headline" id="Format_and_mount_EFI_partition">Format and mount EFI partition</span></h2>
+<pre>mkfs.vfat -n EFI $DISK-part1
+mkdir -p $INST_MNT/boot/efi
+mount $DISK-part1 $INST_MNT/boot/efi
+</pre>
+<h2><span class="mw-headline" id="Packages">Packages</span></h2>
+<p>Only essential packages given here
+</p>
+<pre>pacstrap $INST_MNT base vi mandoc grub cryptsetup btrfs-progs snapper snap-pac grub grub-btrfs
+chmod 750 $INST_MNT/root
+chmod 1777 $INST_MNT/var/tmp/
+</pre>
+<p>Install kernel
+</p>
+<pre>pacstrap $INST_MNT $INST_LINVAR
+</pre>
+<p>If your computer has hardware that requires firmware to run:
+</p>
+<pre>pacstrap $INST_MNT linux-firmware</pre>
+<p>If you boot your computer with EFI:
+</p>
+<pre>pacstrap $INST_MNT dosfstools efibootmgr</pre>
+<p>Microcode:
+</p>
+<ul><li><code>pacstrap $INST_MNT amd-ucode</code></li>
+<li><code>pacstrap $INST_MNT intel-ucode</code></li></ul>
+<p>For other optional packages, see <a rel="nofollow" class="external text" href="https://wiki.archlinux.org/index.php/Installation_guide#Installation">ArchWiki</a>.
+</p>
+<h2><span class="mw-headline" id="System_Configuration">System Configuration</span></h2>
+<p>First, generate fstab
+</p>
+<pre>genfstab -U $INST_MNT &gt;&gt; $INST_MNT/etc/fstab
+</pre>
+<p>Remove hard-coded system subvolume. If not removed, system will ignore btrfs default-id setting, which is used by <code>snapper</code> when rolling back.
+</p>
+<pre>sed -i 's|,subvolid=258,subvol=/@/0/snapshot,subvol=@/0/snapshot||g' $INST_MNT/etc/fstab
+</pre>
+<p>Create LUKS key for initramfs. Without this, you will need to enter the password twice: once in GRUB, once in initramfs.
+</p>
+<pre>mkdir -p $INST_MNT/lukskey
+dd bs=512 count=8 if=/dev/urandom of=$INST_MNT/lukskey/crypto_keyfile.bin
+chmod 600 $INST_MNT/lukskey/crypto_keyfile.bin
+cryptsetup luksAddKey $DISK-part2 $INST_MNT/lukskey/crypto_keyfile.bin
+chmod 700 $INST_MNT/lukskey
+</pre>
+<p>Configure initramfs.
+</p>
+<ul><li>Embed keyfile.</li>
+<li>Embed btrfs binary.</li>
+<li>Add <b>encrypt</b> hook to decrypt LUKS at boot.</li>
+<li>Add OverlayFS for Btrfs snapshots, see <a rel="nofollow" class="external autonumber" href="https://github.com/Antynea/grub-btrfs/blob/master/initramfs/readme.md">[4]</a>.</li>
+<li><b>sd-encrypt</b> hook has a few extra features, but depends on systemd, not documented here. See <a href="https://wiki.archlinux.org/title/Dm-crypt/System_configuration#Using_sd-encrypt_hook" title="Dm-crypt/System configuration">Dm-crypt/System_configuration#Using_sd-encrypt_hook</a></li>
+<li>if you use NVME&nbsp;: in MODULES section  set 'vmd' (<a rel="nofollow" class="external text" href="https://bugs.archlinux.org/task/68704">otherwise</a> - boot failure)</li></ul>
+<pre style="white-space: pre !important; font-variant-ligatures: no-common-ligatures;">cryptkey=/lukskey/crypto_keyfile.bin
+mv $INST_MNT/etc/mkinitcpio.conf $INST_MNT/etc/mkinitcpio.conf.original
+tee $INST_MNT/etc/mkinitcpio.conf &lt;&lt; EOF
+BINARIES=(/usr/bin/btrfs)
+FILES=($cryptkey)
+HOOKS=(base udev autodetect modconf block encrypt filesystems keyboard fsck grub-btrfs-overlayfs)
+EOF
+</pre>
+<p><br>
+Edit /etc/default/grub
+</p>
+<ul><li>Enable cryptodisk for GRUB</li>
+<li>Add kernel command line to decrypt and map LUKS</li>
+<li>Specify LUKS key</li>
+<li>Specify root device</li></ul>
+<pre style="white-space: pre !important; font-variant-ligatures: no-common-ligatures;">echo "GRUB_ENABLE_CRYPTODISK=y" &gt;&gt; $INST_MNT/etc/default/grub
+echo "GRUB_CMDLINE_LINUX=\"cryptdevice=PARTUUID=$boot_partuuid:$boot_mapper_name root=$boot_mapper_path cryptkey=rootfs:$cryptkey\"" &gt;&gt; $INST_MNT/etc/default/grub
+</pre>
+<p>Optional: Create swapfile. Adjust the file size if needed.
+</p>
+<pre>touch $INST_MNT/swap/swapfile
+truncate -s 0 $INST_MNT/swap/swapfile
+chattr +C $INST_MNT/swap/swapfile
+btrfs property set $INST_MNT/swap/swapfile compression none
+dd if=/dev/zero of=$INST_MNT/swap/swapfile bs=1M count=8192 status=progress
+chmod 700 $INST_MNT/swap
+chmod 600 $INST_MNT/swap/swapfile
+mkswap $INST_MNT/swap/swapfile
+echo /swap/swapfile none swap defaults 0 0 &gt;&gt; $INST_MNT/etc/fstab
+</pre>
+<p>Host name:
+</p>
+<pre>echo $INST_HOST &gt; $INST_MNT/etc/hostname</pre>
+<p>Configure the network interface:
+Find the interface name:
+</p>
+<pre>ip link</pre>
+<p>Store it in a variable:
+</p>
+<pre>INET=enp1s0</pre>
+<p>Create network configuration:
+</p>
+<pre>tee $INST_MNT/etc/systemd/network/20-default.network &lt;&lt;EOF
+
+[Match]
+Name=$INET
+
+[Network]
+DHCP=yes
+EOF</pre>
+<p>Customize this file if the system is not a DHCP client. See <a rel="nofollow" class="external text" href="https://wiki.archlinux.org/index.php/Network_configuration">Network Configuration</a>.
+</p><p>Timezone:
+</p>
+<pre>ln -sf $INST_TZ $INST_MNT/etc/localtime
+hwclock --systohc</pre>
+<p>Locale:
+</p>
+<pre>echo "en_US.UTF-8 UTF-8" &gt;&gt; $INST_MNT/etc/locale.gen
+echo "LANG=en_US.UTF-8" &gt;&gt; $INST_MNT/etc/locale.conf</pre>
+<p>Other locales should be added after reboot.
+</p><p>Chroot:
+</p>
+<pre>arch-chroot $INST_MNT /usr/bin/env  DISK=$DISK \
+  INST_UUID=$INST_UUID bash --login</pre>
+<p>Apply locales:
+</p>
+<pre>locale-gen</pre>
+<p>Enable networking:
+</p>
+<pre>systemctl enable systemd-networkd systemd-resolved</pre>
+<p>Set root password:
+</p>
+<pre>passwd</pre>
+<p>Generate initramfs:
+</p>
+<pre>mkinitcpio -P</pre>
+<p>Enable btrfs service
+</p>
+<pre>systemctl enable grub-btrfs.path
+</pre>
+<p>Enable snapper
+</p>
+<pre style="white-space: pre !important; font-variant-ligatures: no-common-ligatures;">umount /.snapshots/
+rmdir /.snapshots/
+snapper --no-dbus -c root create-config /
+rmdir /.snapshots/
+mkdir /.snapshots/
+mount /.snapshots/
+snapper --no-dbus -c home create-config /home/
+systemctl enable /lib/systemd/system/snapper-*
+</pre>
+<p>Optionally add a normal user, use <code>--btrfs-subvolume-home</code>:
+</p>
+<pre>useradd -s /bin/bash -U -G wheel,video -m --btrfs-subvolume-home myuser
+snapper --no-dbus -c myuser create-config /home/myuser
+</pre>
+<h2><span class="mw-headline" id="GRUB_installation">GRUB installation</span></h2>
+<h3><span class="mw-headline" id="EFI">EFI</span></h3>
+<pre>grub-install
+</pre>
+<p>Some motherboards does not properly recognize GRUB boot entry, to ensure that your computer will boot, also install GRUB to fallback location with:
+</p>
+<pre>grub-install --removable</pre>
+<h3><span class="mw-headline" id="BIOS">BIOS</span></h3>
+<pre>grub-install $DISK
+</pre>
+<h3><span class="mw-headline" id="Generate_GRUB_menu">Generate GRUB menu</span></h3>
+<pre>grub-mkconfig -o /boot/grub/grub.cfg
+</pre>
+<h2><span class="mw-headline" id="Finish_Installation">Finish Installation</span></h2>
+<pre>exit
+mount | grep "$INST_MNT/" | tac | cut -d' ' -f3 | xargs -i{} umount -lf {}
+umount $INST_MNT
+cryptsetup close $boot_mapper_name
+reboot
+</pre>
+<h2><span class="mw-headline" id="Create_root_filesystem_snapshot">Create root filesystem snapshot</span></h2>
+<pre>snapper -c root create
+</pre>
+<p>Additional options for <code>create</code>, such as <code>--description</code>, see snapper help.
+</p>
+<h2><span class="mw-headline" id="Rollback_root_filesystem">Rollback root filesystem</span></h2>
+<p>If the system is broken, reboot, select a bootable entry in GRUB snapshot list. Your computer will then boot with a read-only root filesystem with a writable OverlayFS on it.
+</p><p>Run <code>snapper -c root list</code> to find out which snapshot you want to rollback to.
+</p>
+<pre style="white-space: pre !important; font-variant-ligatures: no-common-ligatures;"> # | Type   | Pre # | Date                            | User | Cleanup | Description        | Userdata
+---+--------+-------+---------------------------------+------+---------+--------------------+---------
+0- | single |       |                                 | root |         | current            |
+1  | single |       | Tue 09 Feb 2021 09:44:55 PM +08 | root | number  | boot               |
+2  | single |       | Tue 09 Feb 2021 09:49:30 PM +08 | root | number  | boot               |
+3  | pre    |       | Tue 09 Feb 2021 09:49:51 PM +08 | root | number  | pacman -S dropbear |
+4  | post   |     3 | Tue 09 Feb 2021 09:49:52 PM +08 | root | number  | dropbear           |
+</pre>
+<p>If we want to rollback to 3, run <code>snapper --ambit classic rollback 3</code> to rollback.
+</p>
+<pre style="white-space: pre !important; font-variant-ligatures: no-common-ligatures;">Ambit is classic.
+Creating read-only snapshot of current system. (Snapshot 5.)
+Creating read-write snapshot of snapshot 3. (Snapshot 6.)
+Setting default subvolume to snapshot 6.
+</pre>
+<p>Remember the new default subvolume number <code>6</code>. This will be the new <code>/</code> the computer will boot into.
+Now run <code>grub-mkconfig -o /boot/grub/grub.cfg</code> to let GRUB know about the new snapshots.
+Reboot, select <code>snapshot 6</code> from GRUB menu.
+</p><p>After reboot, run
+</p>
+<pre>grub-install
+grub-mkconfig -o /boot/grub/grub.cfg
+</pre>
+<p>to make <code>snapshot 6</code> the default boot volume. Then you won't need to manually select it again on next reboot.
+</p>
+<!-- 
+NewPP limit report
+Cached time: 20211226101515
+Cache expiry: 86400
+Reduced expiry: false
+Complications: []
+CPU time usage: 0.059 seconds
+Real time usage: 0.062 seconds
+Preprocessor visited node count: 407/1000000
+Post‐expand include size: 2327/2097152 bytes
+Template argument size: 867/2097152 bytes
+Highest expansion depth: 5/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 4042/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   21.182      1 -total
+ 42.38%    8.978      1 Template:Unsupported
+ 27.66%    5.858      7 Template:Text_art
+ 18.63%    3.945     12 Template:Ic
+ 16.63%    3.523      1 Template:META_Message
+-->
+
+<!-- Saved in parser cache with key archwiki:pcache:idhash:32083-0!canonical and timestamp 20211226101515 and revision id 686327. Serialized with JSON.
+ -->
+</div>
+<div class="printfooter">Retrieved from "<a dir="ltr" href="https://wiki.archlinux.org/index.php?title=User:M0p/LUKS_Root_on_Btrfs&amp;oldid=686327">https://wiki.archlinux.org/index.php?title=User:M0p/LUKS_Root_on_Btrfs&amp;oldid=686327</a>"</div></div>
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"><div id="mw-hidden-catlinks" class="mw-hidden-catlinks mw-hidden-cats-hidden">Hidden category: <ul><li><a href="https://wiki.archlinux.org/title/Category:Pages_or_sections_flagged_with_Template:Unsupported" title="Category:Pages or sections flagged with Template:Unsupported">Pages or sections flagged with Template:Unsupported</a></li></ul></div></div>
+	</div>
+
+
+</main>
+
+	</div> 
+</div> 
+
+<div class="mw-workspace-container mw-footer-container">
+	<div class="mw-content-container">
+		<footer id="footer" class="mw-footer" role="contentinfo">
+	<ul id="footer-info">
+	<li id="footer-info-lastmod"> This page was last edited on 6 July 2021, at 18:06.</li>
+	<li id="footer-info-copyright">Content is available under <a class="external" rel="nofollow" href="http://www.gnu.org/copyleft/fdl.html">GNU Free Documentation License 1.3 or later</a> unless otherwise noted.</li>
+</ul>
+
+	<ul id="footer-places">
+	<li id="footer-places-privacy"><a href="https://terms.archlinux.org/docs/privacy-policy/" class="extiw" title="archlinux-service-agreements:privacy-policy">Privacy policy</a></li>
+	<li id="footer-places-about"><a href="https://wiki.archlinux.org/title/ArchWiki:About" title="ArchWiki:About">About ArchWiki</a></li>
+	<li id="footer-places-disclaimer"><a href="https://wiki.archlinux.org/title/ArchWiki:General_disclaimer" title="ArchWiki:General disclaimer">Disclaimers</a></li>
+</ul>
+
+	
+</footer>
+
+	</div>
+</div>
+	</div> 
+</div> 
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.059","walltime":"0.062","ppvisitednodes":{"value":407,"limit":1000000},"postexpandincludesize":{"value":2327,"limit":2097152},"templateargumentsize":{"value":867,"limit":2097152},"expansiondepth":{"value":5,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":4042,"limit":5000000},"timingprofile":["100.00%   21.182      1 -total"," 42.38%    8.978      1 Template:Unsupported"," 27.66%    5.858      7 Template:Text_art"," 18.63%    3.945     12 Template:Ic"," 16.63%    3.523      1 Template:META_Message"]},"cachereport":{"timestamp":"20211226101515","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":135});});</script>
+</body></html>

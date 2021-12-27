@@ -1,0 +1,10 @@
+[Unit]
+Description=Update system once a day
+Documentation=man:btrfs
+
+[Timer]
+OnCalendar=daily
+AccuracySec=1h
+
+[Install]
+WantedBy=timers.target
