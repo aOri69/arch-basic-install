@@ -25,7 +25,8 @@ select opt in "${disks[@]}"; do
 done
 
 # Mountpoint
-INST_MNT=$(mktemp -d)
+#INST_MNT=$(mktemp -d)
+INST_MNT="/mnt"
 
 # Format and Partition
 # Clear the partition table:
