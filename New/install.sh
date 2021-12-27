@@ -107,9 +107,10 @@ for i in {swap,}; do
 done
 
 # Format and mount EFI partition
+ESP_PATH=$INST_MNT/boot/efi
 mkfs.vfat -n EFI $BOOT_PATH
-mkdir -p $INST_MNT/boot/efi
-mount $BOOT_PATH $INST_MNT/boot/efi
+mkdir -p $EFI_PATH
+mount $BOOT_PATH $ESP_PATH
 
 # Packages
 pacstrap $INST_MNT base base-devel vim git mandoc btrfs-progs
@@ -125,10 +126,12 @@ pacstrap $INST_MNT dosfstools efibootmgr
 askYesNo "Install GRUB bootloader?" false
 if [ "$ANSWER" = true ]; then
     pacstrap $INST_MNT grub grub-btrfs
+    GRUB=true
 fi
 askYesNo "Install Snapper?" false
 if [ "$ANSWER" = true ]; then
     pacstrap $INST_MNT snapper snap-pac
+    SNAPPER=true
 fi
 # Microcode:
 askYesNo "Install AMD microcode?" false
@@ -145,13 +148,15 @@ fi
 genfstab -U $INST_MNT >>$INST_MNT/etc/fstab
 # Remove hard-coded system subvolume. If not removed, system will ignore btrfs default-id setting, which is used by snapper when rolling back.
 sed -i 's|,subvolid=258,subvol=/@/0/snapshot,subvol=@/0/snapshot||g' $INST_MNT/etc/fstab
-# Configure initramfs
-mv $INST_MNT/etc/mkinitcpio.conf $INST_MNT/etc/mkinitcpio.conf.original
-tee $INST_MNT/etc/mkinitcpio.conf <<EOF
+if [ "$GRUB" = true ]; then
+    # Configure initramfs
+    mv $INST_MNT/etc/mkinitcpio.conf $INST_MNT/etc/mkinitcpio.conf.original
+    tee $INST_MNT/etc/mkinitcpio.conf <<EOF
 BINARIES=(/usr/bin/btrfs)
 FILES=()
 HOOKS=(base udev autodetect modconf block filesystems keyboard fsck grub-btrfs-overlayfs)
 EOF
+fi
 
 askYesNo "Create a swap file?" false
 if [ "$ANSWER" = true ]; then
@@ -167,72 +172,120 @@ if [ "$ANSWER" = true ]; then
     echo /swap/swapfile none swap defaults 0 0 >>$INST_MNT/etc/fstab
 fi
 # Host name:
-echo $INST_HOST >$INST_MNT/etc/hostname
-echo "127.0.0.1 localhost" >>$INST_MNT/etc/hosts
-echo "::1       localhost" >>$INST_MNT/etc/hosts
-echo "127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >>$INST_MNT/etc/hosts
+#echo $INST_HOST >$INST_MNT/etc/hostname
+#echo "127.0.0.1 localhost" >>$INST_MNT/etc/hosts
+#echo "::1       localhost" >>$INST_MNT/etc/hosts
+#echo "127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >>$INST_MNT/etc/hosts
 # Timezone:
-ln -sf $INST_TZ $INST_MNT/etc/localtime
-hwclock --systohc
+#ln -sf $INST_TZ $INST_MNT/etc/localtime
+#hwclock --systohc
 # Locale:
-echo "en_US.UTF-8 UTF-8" >>$INST_MNT/etc/locale.gen
-echo "LANG=en_US.UTF-8" >>$INST_MNT/etc/locale.conf
-echo "KEYMAP=ru" >>$INST_MNT/etc/vconsole.conf
-echo "FONT=cyr-sun16" >>$INST_MNT/etc/vconsole.conf
+#echo "en_US.UTF-8 UTF-8" >>$INST_MNT/etc/locale.gen
+#echo "LANG=en_US.UTF-8" >>$INST_MNT/etc/locale.conf
+#echo "KEYMAP=ru" >>$INST_MNT/etc/vconsole.conf
+#echo "FONT=cyr-sun16" >>$INST_MNT/etc/vconsole.conf
 # Other locales should be added after reboot.
 
 cat <<EOF >$INST_MNT/root/part2.sh
+#!/bin/bash
 # stuff here to do inside the chroot
+
+function askYesNo {
+    QUESTION=$1
+    DEFAULT=$2
+    if [ "$DEFAULT" = true ]; then
+        OPTIONS="[Y/n]"
+        DEFAULT="y"
+    else
+        OPTIONS="[y/N]"
+        DEFAULT="n"
+    fi
+    read -p "$QUESTION $OPTIONS " -n 1 -s -r INPUT
+    INPUT=${INPUT:-${DEFAULT}}
+    echo ${INPUT}
+    if [[ "$INPUT" =~ ^[yY]$ ]]; then
+        ANSWER=true
+    else
+        ANSWER=false
+    fi
+}
+# Generating Locales
+# English
+#sed -i '177s/.//' /etc/locale.gen
+# Russian
+sed -i '403s/.//' /etc/locale.gen
+locale-gen
+
+# Timezone and time
+ln -sf $INST_TZ /etc/localtime
+timedatectl set-ntp true
+hwclock --systohc
+
+# Base settings
+echo "LANG=ru_RU.UTF-8" >>/etc/locale.conf
+echo "KEYMAP=ru" >>/etc/vconsole.conf
+echo "FONT=cyr-sun16" >>/etc/vconsole.conf
+# Network
+echo $INST_HOST >>/etc/hostname
+echo "127.0.0.1 localhost" >>/etc/hosts
+echo "::1       localhost" >>/etc/hosts
+echo "127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >>/etc/hosts
+
+if [ "$GRUB" = true ]; then
+    # GRUB
+    grub-install --target=x86_64-efi --efi-directory=$ESP_PATH --bootloader-id=GRUB
+    grub-mkconfig -o /boot/grub/grub.cfg
+    #Enable btrfs service
+    systemctl enable grub-btrfs.path
+else
+    # Systemd-boot
+fi
+if [ "$SNAPPER" = true ]; then
+    #Enable snapper
+    umount /.snapshots/
+    rmdir /.snapshots/
+    snapper --no-dbus -c root create-config /
+    rmdir /.snapshots/
+    mkdir /.snapshots/
+    mount /.snapshots/
+    snapper --no-dbus -c home create-config /home/
+    systemctl enable /lib/systemd/system/snapper-*
+    #useradd -s /bin/bash -U -G wheel,video -m --btrfs-subvolume-home asokolov
+    #snapper --no-dbus -c myuser create-config /home/myuser
+fi
 # Users and passwords
 # Root
 echo "....Changing root password: "
 passwd
-# echo root:230989 | chpasswd
-# User
-read -p "....Enter new username to add: " USERNAME
-useradd -m $USERNAME
-echo "....Changing $USERNAME password: "
-passwd $USERNAME
-#echo asokolov:230989 | chpasswd
-echo "....Adding $USERNAME to sudo users: "
-# Sudo
-echo "$USERNAME ALL=(ALL) ALL" >>/etc/sudoers.d/$USERNAME
-# Apply locales:
-locale-gen
-#Enable networking:
-systemctl enable systemd-networkd systemd-resolved
-#Set root password:
-passwd
-#Generate initramfs:
-mkinitcpio -P
-#Enable btrfs service
-systemctl enable grub-btrfs.path
-#Enable snapper
-umount /.snapshots/
-rmdir /.snapshots/
-snapper --no-dbus -c root create-config /
-rmdir /.snapshots/
-mkdir /.snapshots/
-mount /.snapshots/
-snapper --no-dbus -c home create-config /home/
-systemctl enable /lib/systemd/system/snapper-*
-#Optionally add a normal user, use --btrfs-subvolume-home:
-useradd -s /bin/bash -U -G wheel,video -m --btrfs-subvolume-home $USERNAME
-snapper --no-dbus -c $USERNAME create-config /home/$USERNAME
-#GRUB installation
-#EFI
-#grub-install
-#Some motherboards does not properly recognize GRUB boot entry, to ensure that your computer will boot, also install GRUB to fallback location with:
-grub-install --removable
-# Generate GRUB menu
-grub-mkconfig -o /boot/grub/grub.cfg
+
+# Enable services
+askYesNo "Install NetworkManager?" true
+if [ "$ANSWER" = true ]; then
+    pacman -S --noconfirm --needed networkmanager wpa_supplicant
+    systemctl enable NetworkManager
+fi
+askYesNo "Install ACPI daemon?" true
+if [ "$ANSWER" = true ]; then
+    pacman -S --noconfirm --needed acpid acpi acpi_call
+    systemctl enable acpid
+fi
 # to leave the chroot
 exit
 EOF
 
 # Chroot:
-arch-chroot $INST_MNT /usr/bin/env DISK=$DISK \
-    INST_UUID=$INST_UUID bash --login ./root/part2.sh
+arch-chroot $INST_MNT \
+    /usr/bin/env \
+    DISK=$DISK \
+    INST_UUID=$INST_UUID \
+    ESP_PATH=$ESP_PATH \
+    INST_TZ=$INST_TZ \
+    INST_HOST=$INST_HOST \
+    GRUB=$GRUB \
+    SNAPPER=$SNAPPER \
+    bash --login ./root/part2.sh
+
+rm $INST_MNT/root/part2.sh
 
 #exit
 #mount | grep "$INST_MNT/" | tac | cut -d' ' -f3 | xargs -i{} umount -lf {}
