@@ -20,9 +20,9 @@ PS3='Please select the disk to install: '
 disks=($(ls -d /dev/disk/by-id/* | grep -v part))
 select opt in "${disks[@]}"; do
     #DISK=/dev/$opt
-    DISK=$opt
     break
 done
+DISK=$opt
 
 # Mountpoint
 #INST_MNT=$(mktemp -d)
