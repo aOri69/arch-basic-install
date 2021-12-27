@@ -38,7 +38,7 @@ sgdisk -n2:0:0 $DISK
 
 # cryptsetup mapper
 # This naming scheme is taken from Debian installer
-boot_partuuid=`blkid -s PARTUUID -o value $DISK-part2`
+boot_partuuid=$(blkid -s PARTUUID -o value $DISK-part2)
 boot_mapper_name=cryptroot-luks1-partuuid-$boot_partuuid
 boot_mapper_path=/dev/mapper/$boot_mapper_name
 
@@ -166,41 +166,12 @@ hwclock --systohc
 echo "en_US.UTF-8 UTF-8" >>$INST_MNT/etc/locale.gen
 echo "LANG=en_US.UTF-8" >>$INST_MNT/etc/locale.conf
 # Other locales should be added after reboot.
+chmod +x install2.sh
+cp install2.sh $INST_MNT
 # Chroot:
 arch-chroot $INST_MNT /usr/bin/env DISK=$DISK \
     INST_UUID=$INST_UUID bash --login
-# Apply locales:
-locale-gen
-#Enable networking:
-systemctl enable systemd-networkd systemd-resolved
-#Set root password:
-passwd
-#Generate initramfs:
-mkinitcpio -P
-#Enable btrfs service
-systemctl enable grub-btrfs.path
-#Enable snapper
-umount /.snapshots/
-rmdir /.snapshots/
-snapper --no-dbus -c root create-config /
-rmdir /.snapshots/
-mkdir /.snapshots/
-mount /.snapshots/
-snapper --no-dbus -c home create-config /home/
-systemctl enable /lib/systemd/system/snapper-*
-#Optionally add a normal user, use --btrfs-subvolume-home:
-#useradd -s /bin/bash -U -G wheel,video -m --btrfs-subvolume-home asokolov
-#snapper --no-dbus -c myuser create-config /home/myuser
 
-#GRUB installation
-#EFI
-#grub-install
-#Some motherboards does not properly recognize GRUB boot entry, to ensure that your computer will boot, also install GRUB to fallback location with:
-grub-install --removable
-# Generate GRUB menu
-grub-mkconfig -o /boot/grub/grub.cfg
-
-# Finish Installation
 exit
 mount | grep "$INST_MNT/" | tac | cut -d' ' -f3 | xargs -i{} umount -lf {}
 umount $INST_MNT
