@@ -20,7 +20,7 @@ PS3='Please select the disk to install: '
 disks=($(ls -d /dev/disk/by-id/* | grep -v part))
 select opt in "${disks[@]}"; do
     #DISK=/dev/$opt
-    DISK=/dev/disk/by-id/$ortp
+    DISK=/dev/disk/by-id/$opt
     break
 done
 
