@@ -47,7 +47,7 @@ cryptsetup luksFormat --type luks1 $DISK-part2
 cryptsetup open $DISK-part2 $boot_mapper_name
 
 # Format the LUKS container as Btrfs
-mkfs.btrfs $boot_mapper_path
+mkfs.btrfs -f $boot_mapper_path
 mount $boot_mapper_path $INST_MNT
 
 # Create subvolumes
