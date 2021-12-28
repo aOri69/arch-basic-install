@@ -173,16 +173,14 @@ mkdir /.snapshots/
 mount /.snapshots/
 snapper --no-dbus -c home create-config /home/
 systemctl enable /lib/systemd/system/snapper-*
-if [ "$GRUB" = true ]; then
-    grub-install --target=x86_64-efi --efi-directory=$ESP_PATH --bootloader-id=GRUB
-    grub-mkconfig -o /boot/grub/grub.cfg
-    #Enable btrfs service
-    systemctl enable grub-btrfs.path
-fi
-if [ "$NM" = true ]; then
-    pacman -S --noconfirm --needed networkmanager wpa_supplicant
-    systemctl enable NetworkManager
-fi
+
+grub-install --target=x86_64-efi --efi-directory=$ESP_PATH --bootloader-id=GRUB
+grub-mkconfig -o /boot/grub/grub.cfg
+#Enable btrfs service
+systemctl enable grub-btrfs.path
+
+pacman -S --noconfirm --needed networkmanager wpa_supplicant
+systemctl enable NetworkManager
 # to leave the chroot
 exit
 EOF
@@ -196,8 +194,8 @@ arch-chroot $INST_MNT \
     INST_TZ=$INST_TZ \
     INST_HOST=$INST_HOST \
     GRUB=true \
-    NM=true
-SNAPPER=$SNAPPER \
+    NM=true \
+    SNAPPER=$SNAPPER \
     bash --login ./root/part2.sh
 
 rm $INST_MNT/root/part2.sh
