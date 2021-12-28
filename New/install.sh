@@ -76,8 +76,8 @@ mount $ROOT_PATH $INST_MNT -o subvol=/@/0/snapshot,$o_btrfs
 mkdir -p $INST_MNT/{.snapshots,home,root,srv,tmp,opt,swap}
 mkdir -p $INST_MNT/var/{tmp,spool,log,cache}
 mount $ROOT_PATH $INST_MNT/.snapshots/ -o subvol=@,$o_btrfs
-# separate /{home,root,srv,swap,opt} from root filesystem
-for i in {home,root,srv,swap,opt}; do
+# separate /{home,root,srv,opt} from root filesystem
+for i in {home,root,srv,opt}; do
     mount $ROOT_PATH $INST_MNT/$i -o subvol=@$i,$o_btrfs
 done
 # separate /var/{tmp,spool,log,cache} from root filesystem
