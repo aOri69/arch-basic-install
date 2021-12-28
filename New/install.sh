@@ -44,7 +44,8 @@ select opt in "${disks[@]}"; do
 done
 
 # Mountpoint
-INST_MNT=$(mktemp -d)
+# INST_MNT=$(mktemp -d)
+INST_MNT="/mnt"
 
 # Format and Partition
 # Clear the partition table:
@@ -107,7 +108,7 @@ for i in {swap,}; do
 done
 
 # Format and mount EFI partition
-ESP_PATH=$INST_MNT/boot/efi
+ESP_PATH=$INST_MNT/efi
 mkfs.vfat -n EFI $BOOT_PATH
 mkdir -p $ESP_PATH
 mount $BOOT_PATH $ESP_PATH
@@ -123,40 +124,40 @@ pacstrap $INST_MNT linux-firmware linux-headers
 # If you boot your computer with EFI:
 pacstrap $INST_MNT dosfstools efibootmgr
 
-askYesNo "Install GRUB bootloader?" false
-if [ "$ANSWER" = true ]; then
-    pacstrap $INST_MNT grub grub-btrfs
-    GRUB=true
-fi
-askYesNo "Install Snapper?" false
-if [ "$ANSWER" = true ]; then
-    pacstrap $INST_MNT snapper snap-pac
-    SNAPPER=true
-fi
-# Microcode:
-askYesNo "Install AMD microcode?" false
-if [ "$ANSWER" = true ]; then
-    pacstrap $INST_MNT amd-ucode
-fi
-askYesNo "Install Intel microcode?" false
-if [ "$ANSWER" = true ]; then
-    pacstrap $INST_MNT intel-ucode
-fi
+# askYesNo "Install GRUB bootloader?" false
+# if [ "$ANSWER" = true ]; then
+#     pacstrap $INST_MNT grub grub-btrfs
+#     GRUB=true
+# fi
+# askYesNo "Install Snapper?" false
+# if [ "$ANSWER" = true ]; then
+#     pacstrap $INST_MNT snapper snap-pac
+#     SNAPPER=true
+# fi
+# # Microcode:
+# askYesNo "Install AMD microcode?" false
+# if [ "$ANSWER" = true ]; then
+#     pacstrap $INST_MNT amd-ucode
+# fi
+# askYesNo "Install Intel microcode?" false
+# if [ "$ANSWER" = true ]; then
+#     pacstrap $INST_MNT intel-ucode
+# fi
 
 # System Configuration
 # First, generate fstab
 genfstab -U $INST_MNT >>$INST_MNT/etc/fstab
 # Remove hard-coded system subvolume. If not removed, system will ignore btrfs default-id setting, which is used by snapper when rolling back.
 sed -i 's|,subvolid=258,subvol=/@/0/snapshot,subvol=@/0/snapshot||g' $INST_MNT/etc/fstab
-if [ "$GRUB" = true ]; then
-    # Configure initramfs
-    mv $INST_MNT/etc/mkinitcpio.conf $INST_MNT/etc/mkinitcpio.conf.original
-    tee $INST_MNT/etc/mkinitcpio.conf <<EOF
-BINARIES=(/usr/bin/btrfs)
-FILES=()
-HOOKS=(base udev autodetect modconf block filesystems keyboard fsck grub-btrfs-overlayfs)
-EOF
-fi
+# if [ "$GRUB" = true ]; then
+#     # Configure initramfs
+#     mv $INST_MNT/etc/mkinitcpio.conf $INST_MNT/etc/mkinitcpio.conf.original
+#     tee $INST_MNT/etc/mkinitcpio.conf <<EOF
+# BINARIES=(/usr/bin/btrfs)
+# FILES=()
+# HOOKS=(base udev autodetect modconf block filesystems keyboard fsck grub-btrfs-overlayfs)
+# EOF
+# fi
 
 askYesNo "Create a swap file?" false
 if [ "$ANSWER" = true ]; then
@@ -229,34 +230,32 @@ echo "FONT=cyr-sun16" >>/etc/vconsole.conf
 echo $INST_HOST >>/etc/hostname
 echo "127.0.0.1 localhost" >>/etc/hosts
 echo "::1       localhost" >>/etc/hosts
-echo "127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >>/etc/hosts
+echo "127.0.1.1 $INST_HOST.localdomain $INST_HOST" >>/etc/hosts
 
-if [ "$GRUB" = true ]; then
+askYesNo "Install GRUB bootloader?" true
+if [ "$ANSWER" = true ]; then
+    pacman -S --noconfirm --needed efibootmgr grub grub-btrfs
     grub-install --target=x86_64-efi --efi-directory=$ESP_PATH --bootloader-id=GRUB
     grub-mkconfig -o /boot/grub/grub.cfg
     #Enable btrfs service
     systemctl enable grub-btrfs.path
 fi
-if [ "$SNAPPER" = true ]; then
-    #Enable snapper
-    umount /.snapshots/
-    rmdir /.snapshots/
-    snapper --no-dbus -c root create-config /
-    rmdir /.snapshots/
-    mkdir /.snapshots/
-    mount /.snapshots/
-    snapper --no-dbus -c home create-config /home/
-    systemctl enable /lib/systemd/system/snapper-*
-    #useradd -s /bin/bash -U -G wheel,video -m --btrfs-subvolume-home asokolov
-    #snapper --no-dbus -c myuser create-config /home/myuser
-fi
 # Users and passwords
 # Root
 echo "....Changing root password: "
 passwd
-
+askYesNo "Install amd-ucode?" false
+if [ "$ANSWER" = true ]; then
+    AMD = true
+    pacman -S --noconfirm amd-ucode
+fi
+askYesNo "Install intel-ucode?" false
+if [ "$ANSWER" = true ]; then
+    INTEL = true
+    pacman -S --noconfirm intel-ucode
+fi
 # Enable services
-askYesNo "Install NetworkManager?" true
+askYesNo "Install NetworkManager?" false
 if [ "$ANSWER" = true ]; then
     pacman -S --noconfirm --needed networkmanager wpa_supplicant
     systemctl enable NetworkManager
