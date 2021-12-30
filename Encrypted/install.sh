@@ -99,9 +99,10 @@ for i in {swap,}; do
 done
 
 # Format and mount EFI partition
+ESP_PATH=$INST_MNT/efi
 mkfs.vfat -n EFI $DISK-part1
-mkdir -p $INST_MNT/boot/efi
-mount $DISK-part1 $INST_MNT/boot/efi
+mkdir -p $ESP_PATH
+mount $DISK-part1 $ESP_PATH
 
 # Packages
 # Only essential packages given here
@@ -116,7 +117,8 @@ pacstrap $INST_MNT linux-firmware
 pacstrap $INST_MNT dosfstools efibootmgr
 # Microcode:
 pacstrap $INST_MNT amd-ucode
-pacstrap $INST_MNT intel-ucode
+#pacstrap $INST_MNT intel-ucode
+pacstrap $INST_MNT networkmanager wpa_supplicant
 
 # System Configuration
 # First, generate fstab
@@ -152,12 +154,12 @@ mkswap $INST_MNT/swap/swapfile
 echo /swap/swapfile none swap defaults 0 0 >>$INST_MNT/etc/fstab
 # Host name:
 echo $INST_HOST >$INST_MNT/etc/hostname
-# Configure the network interface: Find the interface name:
-ip link
-#Store it in a variable:
-read -p "....Enter interface name to configure: " INET
-#Create network configuration:
-tee $INST_MNT/etc/systemd/network/20-default.network <<EOF
+# # Configure the network interface: Find the interface name:
+# ip link
+# #Store it in a variable:
+# read -p "....Enter interface name to configure: " INET
+# #Create network configuration:
+# tee $INST_MNT/etc/systemd/network/20-default.network <<EOF
 
 [Match]
 Name=$INET
@@ -178,7 +180,8 @@ cat <<EOF >$INST_MNT/root/part2.sh
 # Apply locales:
 locale-gen
 #Enable networking:
-systemctl enable systemd-networkd systemd-resolved
+#systemctl enable systemd-networkd systemd-resolved
+systemctl enable NetworkManager
 #Set root password:
 passwd
 #Generate initramfs:
@@ -202,7 +205,8 @@ systemctl enable /lib/systemd/system/snapper-*
 #EFI
 #grub-install
 #Some motherboards does not properly recognize GRUB boot entry, to ensure that your computer will boot, also install GRUB to fallback location with:
-grub-install --removable
+#grub-install --removable
+grub-install --target=x86_64-efi --efi-directory=$ESP_PATH --bootloader-id=GRUB
 # Generate GRUB menu
 grub-mkconfig -o /boot/grub/grub.cfg
 # to leave the chroot
@@ -212,6 +216,7 @@ EOF
 # Chroot:
 arch-chroot $INST_MNT /usr/bin/env DISK=$DISK \
     INST_UUID=$INST_UUID bash --login \
+    ESP_PATH=$ESP_PATH\
     ./root/part2.sh
 
 rm $INST_MNT/root/part2.sh
